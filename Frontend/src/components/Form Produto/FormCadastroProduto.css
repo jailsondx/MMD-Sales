@@ -1,0 +1,64 @@
+.Cad-Prod{
+    display: flex;
+    flex-direction: row;
+    width: 100vw;
+    height: 90vh;
+
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.Title-Page, .Form-Cad-Prod{
+    display: flex;
+    flex-direction: row;
+
+    width: 35vw;
+    height: 90%;
+    
+    justify-content: center;
+    align-items: center;
+    text-align: left;
+}
+
+.Form-Cad-Prod{
+    color: whitesmoke;
+    font-size: 3vh;
+    background: rgba(0, 0, 0, 0.7);
+
+    border: 20%;
+    border-radius: 10px;
+    
+}
+
+input[type=text], [type=number] {
+    height: 6vh;
+    width: 30vw;
+}
+
+.formCampo{
+    padding-bottom: 2vh;
+}
+
+Button{
+    width: 30vw;
+    margin-top: 5%;
+}
+
+.informacoesAdicionais{
+    width: 30vw;
+    height: 15vh;
+    resize: none;
+}
+
+
+/* WebKit */
+input[type=number]::-webkit-inner-spin-button { 
+    -webkit-appearance: none;
+    
+}
+input[type=number] { 
+   -moz-appearance: textfield;
+   appearance: textfield;
+
+}
