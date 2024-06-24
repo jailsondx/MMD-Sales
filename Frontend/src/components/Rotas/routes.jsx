@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import Home from '../../pages/Home/home'
 import Cadastro from '../../pages/Cadastro/cadastro'
-import Lista from '../../pages/Cadastro/cadastro'
+import Lista from '../../pages/Lista/lista'
 import Vendas from '../../pages/Vendas/vendas'
 
 

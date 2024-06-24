@@ -31,7 +31,7 @@
     
 }
 
-input[type=text], [type=number] {
+.input-Cadastro{
     height: 6vh;
     width: 30vw;
 }
@@ -50,7 +50,6 @@ Button{
     height: 15vh;
     resize: none;
 }
-
 
 /* WebKit */
 input[type=number]::-webkit-inner-spin-button { 

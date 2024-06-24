@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Button, Form } from 'react-bootstrap';
+import { Button, Form, InputGroup } from 'react-bootstrap';
 import CurrencyInput from 'react-currency-input-field';
+
+import { Alert, Snackbar } from '@mui/material';
 
 import './FormCadastroProduto.css';
 
@@ -25,6 +27,16 @@ function FormCadastroProduto() {
         }));
     };
 
+    const [showTemporaryModal, setShowTemporaryModal] = useState(false);
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setShowTemporaryModal(false);
+    };
+
+
     const handleCurrencyChange = (value, name) => {
         setproduto(prevproduto => ({
             ...prevproduto,
@@ -41,7 +53,7 @@ function FormCadastroProduto() {
         try {
             const response = await axios.post(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/data`, { produto });
             console.log('Resposta do Servidor:', response.data);
-            alert('SUCESSO CADASTRO');
+            setShowTemporaryModal(true);
         } catch (error) {
             console.error('Houve um erro ao enviar as informacoes!', error);
         }
@@ -69,6 +81,7 @@ function FormCadastroProduto() {
                             <Form.Group controlId="formDescricaoProduto">
                                 <Form.Label>Descrição do Produto:</Form.Label>
                                 <Form.Control
+                                    className='input-Cadastro'
                                     type="text"
                                     name="nome"
                                     autoComplete='no'
@@ -84,6 +97,7 @@ function FormCadastroProduto() {
                             <Form.Group controlId="formCodigoBarras">
                                 <Form.Label>Código de Barras:</Form.Label>
                                 <Form.Control
+                                    className='input-Cadastro'
                                     type="number"
                                     name="codigoBarras"
                                     autoComplete='no'
@@ -98,17 +112,24 @@ function FormCadastroProduto() {
                         <div className='formCampo'>
                             <Form.Group controlId="formPreco">
                                 <Form.Label>Preço:</Form.Label>
-                                <CurrencyInput
-                                    className="form-control"
+                                <InputGroup className="mb-3">
+                                <InputGroup.Text>R$</InputGroup.Text>
+                                <Form.Control
+                                    className='input-Cadastro'
+                                    type="number"
+                                    //className="form-control"
                                     name="preco"
                                     value={produto.preco}
                                     autoComplete='no'
-                                    intlConfig={{ locale: 'pt-BR', currency: 'BRL' }}
-                                    onValueChange={handleCurrencyChange}
+                                    //intlConfig={{ locale: 'pt-BR', currency: 'BRL' }}
+                                    //onValueChange={handleCurrencyChange}
+                                    onChange={handleChange}
                                     placeholder="Digite o preço"
                                     required
                                 />
+                                </InputGroup>
                             </Form.Group>
+                            
                         </div>
 
                         <div className='formCampo'>
@@ -132,7 +153,15 @@ function FormCadastroProduto() {
                     </Form>
                 </div>
             </div>
+            <Snackbar open={showTemporaryModal} autoHideDuration={3000} onClose={handleClose}>
+                    <Alert
+                        className='alert-Editar'
+                        severity="success">
+                        Produto Cadastrado com <b>Sucesso</b>
+                    </Alert>
+                </Snackbar>
         </div>
+        
     );
 }
 

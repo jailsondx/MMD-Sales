@@ -1,0 +1,79 @@
+.Lista-Prod{
+    display: flex;
+    flex-direction: column;
+
+    width: 100vw;
+
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.Lista-ID{
+    width: 2%;
+}
+
+.Lista-Nome-Prod{
+    width: 70%;
+}
+
+.Lista-Cod-Prod{
+  width: auto;
+}
+
+.Lista-Preco{
+    width: 10%;
+}
+
+.Lista-Actions{
+  width: 20%;
+}
+
+.buttons-Action{
+  display: flex;
+  flex-direction: row;
+
+  width: 100%;
+
+  justify-content: space-between;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 80vw;
+
+    border-radius: 1000px;
+  }
+
+  thead{
+    color: whitesmoke;
+    background-color:   #255C99;
+  }
+  
+  td, th {
+    text-align: left;
+    padding: 8px;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5vh;
+    margin-bottom: 5vh;
+}
+
+.button-Pagination{
+    margin-top: 0;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.pagination span {
+    margin: 0 10px;
+}

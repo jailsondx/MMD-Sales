@@ -1,0 +1,19 @@
+{
+  "name": "MMD-Sales",
+  "version": "1.0.0",
+  "scripts": {
+    "start-all": "docker start MySql-MMD && sleep 5 && npm start",
+    "start-docker": "docker start MySql-MMD",
+    "stop-docker": "docker stop MySql-MMD",
+    "start": "concurrently \"npm run dev --prefix Frontend\" \"npm run dev --prefix Backend\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "dependencies": {
+    "react-modal": "^3.16.1"
+  }
+}

@@ -1,11 +1,15 @@
 // pages/Lista.js
 import React from 'react';
+import Modal from 'react-modal';
+import ListaProdutos from '../../components/Lista Produtos/ListaProdutos';
+
+
+Modal.setAppElement('#root');
 
 function Lista() {
   return (
     <div>
-      <h2>Lista</h2>
-      <p>Visualize a lista de itens cadastrados.</p>
+      <ListaProdutos />
     </div>
   );
 }

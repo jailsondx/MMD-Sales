@@ -1,0 +1,55 @@
+.Tela-Vendas{
+    display: flex;
+    flex-direction: column;
+
+
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    width: 100vw;
+}
+
+.text-Venda-AddInfor{
+    color: gray;
+    font-size: 0.7rem;
+
+    font-style: italic;
+}
+
+.form-Adicao-Produto{
+    display: flex;
+    flex-direction: row;
+
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    width: 40vw;
+}
+
+
+.input-Adicao-Produto{
+    display: flex;
+    flex-direction: row !important;
+    flex-wrap: nowrap;
+
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    width: 40vw;
+    height: 8vh;
+
+    border: 0;
+    border-bottom: 2px solid;
+}
+
+.text-Total{
+    font-size: 40vh;
+    margin: 3vh;
+}
+
+.table-Lista-Produtos-Venda{
+    width: 80vw;
+}
