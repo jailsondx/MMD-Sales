@@ -25,6 +25,10 @@ npm install @fontsource/roboto
 --Instalar o MODAL para React
 npm install react-modal
 
+--Instalar o react-beforeunload
+npm install react-beforeunload
+
+
 --Instale o React Imask para criar mascaras de input para moedas
 npm install react-currency-input-field
 

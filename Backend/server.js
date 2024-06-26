@@ -10,10 +10,16 @@ const { performance } = require('perf_hooks');
 const getLocalIPAddress = require('./functions/getLocalIPAddress');
 const genEnvVar = require('./functions/GenEnv');
 const CadastraProduto = require('./functions/CadastraProduto');
+const CadastraMercadoriaBalanca = require('./functions/CadastraMercadoriaBalanca');
 const ListaProdutos = require('./functions/ListaProdutos');
-const AtualizaProduto = require('./functions/AtualizaProduto')
+const ListaMercadorias = require('./functions/ListaMercadorias');
+const AtualizaProduto = require('./functions/AtualizaProduto');
+const AtualizaMercadoria = require('./functions/AtualizaMercadoria');
 const ApagaProduto = require('./functions/ApagaProduto');
+const ApagaMercadoria = require('./functions/ApagaMercadoria');
 const AdicionaProduto = require('./functions/AdicionaProdutoVenda');
+const PesquisaNaBalanca = require('./functions/PesquisaNaBalanca');
+
 
 const PORT = 3001;
 const app = express();
@@ -41,7 +47,7 @@ const envPathFront = path.join(__dirname, '../Frontend/.env');
 const envPathBack = path.join(__dirname, './.env');
 
 // Rota para receber os dados
-app.post('/api/data', (req, res) => {
+app.post('/api/CadastroProduto', (req, res) => {
   const data = req.body;
   const produto = data.produto;
 
@@ -55,11 +61,30 @@ app.post('/api/data', (req, res) => {
   CadastraProduto(DBconnection, produto);
 });
 
+// Rota para receber os dados de Mercadorias de Balança
+app.post('/api/CadastroMercadoriaBalanca', (req, res) => {
+  const data = req.body;
+  const mercadoria = data.produto;
+
+  //Limpa o Console
+  console.clear();
+
+  console.log('Informacoes da Mercadoria:', mercadoria);
+  res.send({ Status: 'Recebido com sucesso', Dados: mercadoria });
+
+  //Funcao que faz o cadastro no DB
+  CadastraMercadoriaBalanca(DBconnection, mercadoria);
+});
+
 // Rota para receber os dados
 app.get('/api/produtos', (req, res) => {
   ListaProdutos(DBconnection, res);
 });
 
+// Rota para receber os dados
+app.get('/api/mercadoriaBalanca', (req, res) => {
+  ListaMercadorias(DBconnection, res);
+});
 
 // Rota PUT para atualizar um produto
 app.put('/api/produtos/:id', async (req, res) => {
@@ -81,8 +106,28 @@ app.put('/api/produtos/:id', async (req, res) => {
   }
 });
 
+// Rota PUT para atualizar uma Mercadoria de Peso
+app.put('/api/mercadoriasBalanca/:id', async (req, res) => {
+  const { id } = req.params;
+  const mercadoria = req.body;
 
-// Rota PUT para atualizar um produto
+  try {
+      const resAtualizaMercadoria = await AtualizaMercadoria(DBconnection, id, mercadoria);
+      
+      if(resAtualizaMercadoria == '200'){
+        res.send("Mercadoria atualizado com sucesso!");
+      } else {
+        res.status(500).json({ message: 'Erro ao atualizar produto' });
+      }
+
+  } catch (error) {
+      res.send("ERROR");
+      //res.status(500).json({ message: 'Erro ao atualizar produto' });
+  }
+});
+
+
+// Rota DELETE para APAGAR um produto
 app.delete('/api/produtos/:id', async (req, res) => {
   const { id } = req.params;
   const produto = req.body;
@@ -102,16 +147,39 @@ app.delete('/api/produtos/:id', async (req, res) => {
   }
 });
 
+// Rota DELETE para APAGAR uma MERCADORIA
+app.delete('/api/mercadoria/:id', async (req, res) => {
+  const { id } = req.params;
+  const mercadoria = req.body;
+
+  try {
+      const resAtualizaMercadoria = await ApagaMercadoria(DBconnection, id, mercadoria);
+      
+      if(resAtualizaMercadoria == '200'){
+        res.send("Mercadoria apagado com sucesso!");
+      } else {
+        res.status(500).json({ message: 'Erro ao apagar mercadoria' });
+      }
+
+  } catch (error) {
+      res.send("ERROR");
+      //res.status(500).json({ message: 'Erro ao atualizar produto' });
+  }
+});
+
 // Rota para receber os dados
 app.get('/api/produtos/vendas', async (req, res) => {
   const produtoAdicionado = req.query;
   //const produtoAdicionado = {barcode};
 
-  console.log('Codigo de barras solictado', produtoAdicionado);
+  console.log('Codigo de barras do Produto:', produtoAdicionado.barcode);
 
-  //const produto = await AdicionaProduto(DBconnection, produtoAdicionado);
-  const produto = await AdicionaProduto(DBconnection, produtoAdicionado,res);
-  //res.json(produto);
+      // Verifica se o codBarras inicia com o número 2
+      if (produtoAdicionado.barcode.startsWith(2)) {
+        const produto_balanca = await PesquisaNaBalanca(DBconnection,produtoAdicionado,res);
+    } else {
+        const produto = await AdicionaProduto(DBconnection, produtoAdicionado,res);
+    }
 });
 
 

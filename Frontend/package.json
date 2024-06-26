@@ -19,6 +19,7 @@
     "bootstrap": "^5.3.3",
     "dotenv": "^16.4.5",
     "react": "^18.2.0",
+    "react-beforeunload": "^2.6.0",
     "react-bootstrap": "^2.10.2",
     "react-currency-input-field": "^3.8.0",
     "react-dom": "^18.2.0",

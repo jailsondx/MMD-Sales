@@ -4,6 +4,7 @@ async function CadastraProduto(DBconnection, produto) {
     try {
         // Realiza a formatação dos valores
         produto.preco = FormataValor(produto.preco, ',', '.');
+        produto.nome = produto.nome.toUpperCase();
 
         // Preparando a consulta SQL
         const sql = 'INSERT INTO produtos (prod_nome, prod_cod, prod_preco, prod_add_infor) VALUES (?, ?, ?, ?)';

@@ -2,7 +2,7 @@
 import React from 'react';
 import FormCadastroProduto from '../../components/Form Produto/FormCadastroProduto';
 
-function Cadastro() {
+function CadastroProduto() {
   return (
     <div>
       <FormCadastroProduto />
@@ -10,4 +10,4 @@ function Cadastro() {
   );
 }
 
-export default Cadastro;
+export default CadastroProduto;

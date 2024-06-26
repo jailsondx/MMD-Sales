@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import PesquisaProduto from '../Pesquisa Produto/PesquisaProduto';
 
-import './ListaProdutos.css';
-import ButtonEditar from '../Button Editar/ButtonEditar';
-import ButtonApagar from '../Button Apagar/ButtonApagar';
+import './ListaMercadorias.css';
+import ButtonEditarMercadoria from '../Button Editar Mercadoria/ButtonEditarMercadoria';
+import ButtonApagarMercadoria from '../Button Apagar Mercadoria/ButtonApagarMercadoria';
 
-const ListaProdutos = () => {
-    const [produtos, setProdutos] = useState([]);
-    const [produtosFiltrados, setProdutosFiltrados] = useState([]);
+const ListaMercadorias = () => {
+    const [mercadorias, setProdutos] = useState([]);
+    const [mercadoriasFiltrados, setProdutosFiltrados] = useState([]);
     const [error, setError] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(10); // Número de itens por página
@@ -16,13 +16,13 @@ const ListaProdutos = () => {
     useEffect(() => {
         const fetchProdutos = async () => {
             try {
-                const response = await axios.get(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/produtos`);
+                const response = await axios.get(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/mercadoriaBalanca`);
                 console.log('Resposta do Servidor:', response.data);
                 setProdutos(response.data);
-                setProdutosFiltrados(response.data); // Inicialmente, mostrar todos os produtos
+                setProdutosFiltrados(response.data); // Inicialmente, mostrar todos os mercadorias
             } catch (error) {
-                console.error('Erro ao buscar produtos:', error);
-                setError('Erro ao buscar produtos');
+                console.error('Erro ao buscar mercadorias:', error);
+                setError('Erro ao buscar mercadorias');
             }
         };
 
@@ -31,23 +31,23 @@ const ListaProdutos = () => {
 
     const handleSearch = (query) => {
         if (query === '') {
-            setProdutosFiltrados(produtos);
+            setProdutosFiltrados(mercadorias);
         } else {
             const queryLower = query.toLowerCase();
-            setProdutosFiltrados(produtos.filter(produto =>
-                produto.prod_nome.toLowerCase().includes(queryLower) ||
-                produto.prod_cod.toString().includes(query)
+            setProdutosFiltrados(mercadorias.filter(mercadoria =>
+                mercadoria.prod_nome.toLowerCase().includes(queryLower) ||
+                mercadoria.prod_cod.toString().includes(query)
             ));
         }
         setCurrentPage(1); // Resetar para a primeira página ao buscar
     };
 
-    // Calcular os produtos a serem exibidos na página atual
+    // Calcular os mercadorias a serem exibidos na página atual
     const indexOfLastProduct = currentPage * itemsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - itemsPerPage;
-    const currentProdutos = produtosFiltrados.slice(indexOfFirstProduct, indexOfLastProduct);
+    const currentProdutos = mercadoriasFiltrados.slice(indexOfFirstProduct, indexOfLastProduct);
 
-    const totalPages = Math.ceil(produtosFiltrados.length / itemsPerPage);
+    const totalPages = Math.ceil(mercadoriasFiltrados.length / itemsPerPage);
 
     const handlePrevPage = () => {
         setCurrentPage(prevPage => (prevPage > 1 ? prevPage - 1 : prevPage));
@@ -66,39 +66,37 @@ const ListaProdutos = () => {
     }
 
     const handleEdit = (editedProduct) => {
-        setProdutos(produtos.map(produto => (produto.id === editedProduct.id ? editedProduct : produto)));
-        setProdutosFiltrados(produtosFiltrados.map(produto => (produto.id === editedProduct.id ? editedProduct : produto)));
+        setProdutos(mercadorias.map(mercadoria => (mercadoria.id === editedProduct.id ? editedProduct : mercadoria)));
+        setProdutosFiltrados(mercadoriasFiltrados.map(mercadoria => (mercadoria.id === editedProduct.id ? editedProduct : mercadoria)));
     };
 
     const handleDelete = (productId) => {
-        setProdutos(produtos.filter(p => p.id !== productId));
+        setProdutos(mercadorias.filter(p => p.id !== productId));
     };
 
     return (
         <div className='Lista-Prod'>
-            <h1>Lista de Produtos</h1>
+            <h1>Lista de Mercadorias</h1>
             <PesquisaProduto onSearch={handleSearch} />
             <table>
                 <thead>
                     <tr>
                         <th className='Lista-ID' hidden>ID</th>
                         <th className='Lista-Nome-Prod'>Produto</th>
-                        <th className='Lista-Preco'>Preço</th>
                         <th className='Lista-Cod-Prod'>Cod. Barras</th>
                         <th className='Lista-Actions'>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {currentProdutos.map((produto) => (
-                        <tr key={produto.id}>
-                            <td hidden>{produto.id}</td>
-                            <td>{produto.prod_nome}</td>
-                            <td>R$ {produto.prod_preco}</td>
-                            <td>{produto.prod_cod}</td>
+                    {currentProdutos.map((mercadoria) => (
+                        <tr key={mercadoria.id}>
+                            <td hidden>{mercadoria.id}</td>
+                            <td>{mercadoria.prod_nome}</td>
+                            <td>{mercadoria.prod_cod}</td>
                             <td>
                                 <div className='buttons-Action'>
-                                <ButtonEditar produto={produto} onEdit={handleEdit} />
-                                <ButtonApagar produto={produto} onDelete={handleDelete} />
+                                <ButtonEditarMercadoria mercadoria={mercadoria} onEdit={handleEdit} />
+                                <ButtonApagarMercadoria mercadoria={mercadoria} onDelete={handleDelete} />
                                 </div>
                             </td>
                         </tr>
@@ -124,4 +122,4 @@ const ListaProdutos = () => {
     );
 };
 
-export default ListaProdutos;
+export default ListaMercadorias;

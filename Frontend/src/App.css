@@ -6,3 +6,50 @@
   align-items: center;
   text-align: center;
 }
+
+[class^="Lista-"] {
+  border-right: 1px solid;
+}
+
+.Lista-ID{
+  width: 2%;
+}
+
+.Lista-Nome-Prod{
+  width: 70%;
+}
+
+.Lista-Cod-Prod{
+width: auto;
+}
+
+.Lista-Quantidade{
+  width: auto;
+  }
+
+.Lista-Preco{
+  width: 10%;
+}
+
+.Lista-Actions{
+width: 20%;
+}
+
+.Lista-Acao{
+  width: auto;
+  }
+
+input[type="text"], [type="number"] {
+  text-transform: uppercase;
+}
+
+/* WebKit */
+input[type=number]::-webkit-inner-spin-button { 
+  -webkit-appearance: none;
+  
+}
+input[type=number] { 
+ -moz-appearance: textfield;
+ appearance: textfield;
+
+}

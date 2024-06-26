@@ -6,7 +6,7 @@ import { Alert, Snackbar } from '@mui/material';
 
 import './ButtonApagar.css'
 
-const ButtonApagar = ({ produto, onDelete }) => {
+const ButtonApagarMercadoria = ({ mercadoria, onDelete }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [error, setError] = useState('');
     const [showTemporaryModal, setShowTemporaryModal] = useState(false);
@@ -21,15 +21,15 @@ const ButtonApagar = ({ produto, onDelete }) => {
 
     const handleDelete = async () => {
         try {
-            const response = await axios.delete(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/produtos/${produto.id}`);
-            if (response.data === "Produto apagado com sucesso!") {
-                onDelete(produto.id);
+            const response = await axios.delete(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/mercadoria/${mercadoria.id}`);
+            if (response.data === "Mercadoria apagado com sucesso!") {
+                onDelete(mercadoria.id);
                 setShowTemporaryModal(true);
                 closeModal();
             }
         } catch (error) {
-            console.error('Erro ao apagar produto:', error);
-            setError('Erro ao apagar produto. Verifique o ID e o servidor.');
+            console.error('Erro ao apagar mercadoria:', error);
+            setError('Erro ao apagar mercadoria. Verifique o ID e o servidor.');
         }
     };
 
@@ -45,7 +45,7 @@ const ButtonApagar = ({ produto, onDelete }) => {
             <Button className='button-Apagar' variant="danger" onClick={openModal}>Apagar</Button>
             <Modal className="modal-Apagar" isOpen={modalIsOpen} onRequestClose={closeModal}>
                 <h2>Confirmar Exclusão</h2>
-                <p>Tem certeza que deseja apagar o produto: <b>{produto.prod_nome}?</b></p>
+                <p>Tem certeza que deseja apagar o mercadoria: <b>{mercadoria.prod_nome}?</b></p>
                 <Button variant="danger" onClick={handleDelete}>Confirmar</Button>
                 <Button variant="secondary" onClick={closeModal}>Cancelar</Button>
             </Modal>
@@ -53,11 +53,11 @@ const ButtonApagar = ({ produto, onDelete }) => {
                 <Alert
                     className='alert-Editar'
                     severity="success">
-                    Produto Apagado com <b>Sucesso</b>
+                    Mercadoria Apagada com <b>Sucesso</b>
                 </Alert>
             </Snackbar>
         </>
     );
 };
 
-export default ButtonApagar;
+export default ButtonApagarMercadoria;

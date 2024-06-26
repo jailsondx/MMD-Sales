@@ -1,11 +1,11 @@
 // pages/Home.js
 import React from 'react';
+import Central from '../../components/Central/Central';
 
 function Home() {
   return (
     <div>
-      <h2>Home</h2>
-      <p>Bem-vindo à página inicial!</p>
+      <Central />
     </div>
   );
 }

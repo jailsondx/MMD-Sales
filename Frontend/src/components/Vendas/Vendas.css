@@ -31,25 +31,52 @@
 
 .input-Adicao-Produto{
     display: flex;
-    flex-direction: row !important;
+    flex-direction: row;
     flex-wrap: nowrap;
 
     justify-content: center;
     align-items: center;
     text-align: center;
 
+    font-size: 2rem;
+
     width: 40vw;
     height: 8vh;
 
     border: 0;
     border-bottom: 2px solid;
+
+    background-color: whitesmoke;
 }
 
-.text-Total{
-    font-size: 40vh;
+.input-Adicao-Produto:focus{
+    background-color: whitesmoke;
+}
+
+.text-Total {
+    font-size: 10vh;
     margin: 3vh;
+}
+
+.text-Total b {
+    color: #b3001bff;
+}
+
+.text-Total b:hover {
+    border-bottom: 300px #b3001bff;
+    text-decoration-line:underline;
+    text-underline-offset: 2vh;
 }
 
 .table-Lista-Produtos-Venda{
     width: 80vw;
 }
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+
+.table-Head{
+    color: whitesmoke;
+    background-color:   #b3001bff;
+  }

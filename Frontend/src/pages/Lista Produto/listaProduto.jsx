@@ -6,7 +6,7 @@ import ListaProdutos from '../../components/Lista Produtos/ListaProdutos';
 
 Modal.setAppElement('#root');
 
-function Lista() {
+function ListaProduto() {
   return (
     <div>
       <ListaProdutos />
@@ -14,4 +14,4 @@ function Lista() {
   );
 }
 
-export default Lista;
+export default ListaProduto;

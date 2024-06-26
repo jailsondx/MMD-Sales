@@ -15,7 +15,7 @@ async function AdicionaProduto(DBconnection, codBarras, res) {
         });
         
         // Log para verificar os dados após formatação
-        console.log('Dados formatados:', updatedRows);
+        //console.log('Dados formatados:', updatedRows);
 
         res.json(updatedRows);
     } catch (error) {
