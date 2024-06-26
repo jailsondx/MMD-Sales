@@ -51,9 +51,9 @@ const ButtonApagarMercadoria = ({ mercadoria, onDelete }) => {
             </Modal>
             <Snackbar open={showTemporaryModal} autoHideDuration={3000} onClose={handleClose}>
                 <Alert
-                    className='alert-Editar'
+                    className='alert-Snackbar'
                     severity="success">
-                    Mercadoria Apagada com <b>Sucesso</b>
+                    Mercadoria Apagada com <b>Sucesso</b> Atualize a pagina
                 </Alert>
             </Snackbar>
         </>

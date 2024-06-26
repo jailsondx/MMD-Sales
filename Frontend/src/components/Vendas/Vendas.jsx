@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Form, Button, Table, Alert } from 'react-bootstrap';
+import { Form, Button, Alert, Modal, InputGroup } from 'react-bootstrap';
 import BotaoRemover from '../Button Remover da Lista/ButtonRemover';
 import { Beforeunload } from 'react-beforeunload';
-
 
 import './Vendas.css';
 
@@ -25,7 +24,24 @@ const TelaVendas = () => {
     const [error, setError] = useState('');
     const [aviso, setAviso] = useState('');
     const [multiplicador, setMultiplicador] = useState(1);
-    
+
+    // Estados para o modal de adição manual de produto
+    const [showModal, setShowModal] = useState(false);
+    const [valorProduto, setValorProduto] = useState('');
+
+    useEffect(() => {
+        const handleKeyDown = (event) => {
+            if (event.key === 'F2') {
+                setShowModal(true);
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, []);
 
     const handleSearch = async (event) => {
         event.preventDefault();
@@ -42,7 +58,7 @@ const TelaVendas = () => {
             setMultiplicador(parseInt(barcode, 10));
             setQuantidade(parseInt(barcode, 10));
             setBarcode('');
-            setAviso('O Proximo produto será adicionado na quantidade de: ' + barcode + 'x');
+            setAviso('O próximo produto será adicionado na quantidade de: ' + barcode + 'x');
             return;
         }
 
@@ -54,41 +70,22 @@ const TelaVendas = () => {
             const produto = response.data[0]; // Ajuste aqui para pegar o primeiro item da lista
             if (!produto) {
                 setError('Produto não encontrado.');
-                setBarcode('');
                 return;
             }
 
             console.log('Produto:', produto);
 
-            if(multiplicador > 1){
-                // Multiplica o preço pelo multiplicador
-                const precoOriginal = parseFloat(produto.prod_preco.replace(',', '.'));
-                produto.unidade_preco = produto.prod_preco;
-                const precoMultiplicado = precoOriginal * multiplicador;
-                produto.prod_preco = precoMultiplicado.toFixed(2).toString().replace('.', ',');
+            const precoOriginal = parseFloat(produto.prod_preco.replace(',', '.'));
+            const precoMultiplicado = precoOriginal * multiplicador;
+            produto.prod_preco = precoMultiplicado.toFixed(2).toString().replace('.', ',');
+            produto.quantidade = multiplicador;
 
-                produto.quantidade = multiplicador;
+            setProdutos([...produtos, produto]);
+            setTotal(prevTotal => prevTotal + precoMultiplicado);
+            setBarcode('');
+            setMultiplicador(1); // Resetar o multiplicador após usar
+            setQuantidade(1); // Resetar a quantidade após usar
 
-                setProdutos([...produtos, produto]);
-                setTotal(prevTotal => prevTotal + precoMultiplicado);
-                setBarcode('');
-                setMultiplicador(1); // Resetar o multiplicador após usar
-                setQuantidade(1); // Resetar a quantidade após usar
-            } else {
-                //const precoOriginal = parseFloat(produto.prod_preco.replace(',', '.'));
-                const precoMultiplicado = produto.prod_preco * multiplicador;
-                produto.unidade_preco = produto.prod_preco;
-                produto.prod_preco = precoMultiplicado.toFixed(2).toString().replace('.', ',');
-
-                produto.quantidade = multiplicador;
-
-                setProdutos([...produtos, produto]);
-                setTotal(prevTotal => prevTotal + precoMultiplicado);
-                setBarcode('');
-                setMultiplicador(1); // Resetar o multiplicador após usar
-                setQuantidade(1); // Resetar a quantidade após usar
-            }
-            
         } catch (error) {
             console.error('Erro ao buscar produto:', error);
             setError('Erro ao buscar produto. Verifique o código de barras e o servidor.');
@@ -97,24 +94,36 @@ const TelaVendas = () => {
 
     const handleRemove = (index) => {
         const produtoRemovido = produtos[index];
-        const precoRemovido = parseFloat(produtoRemovido.prod_preco.replace(',', '.'));
-        setTotal(prevTotal => prevTotal - precoRemovido);
+        const precoRemovido = parseFloat(produtoRemovido.prod_preco.replace(',', '.')) / produtoRemovido.quantidade;
+        setTotal(prevTotal => prevTotal - (precoRemovido * produtoRemovido.quantidade));
 
         const novosProdutos = produtos.filter((_, i) => i !== index);
         setProdutos(novosProdutos);
     };
 
+    const handleModalClose = () => setShowModal(false);
+
+    const handleModalSave = () => {
+        const novoProduto = {
+            prod_nome: "Produto sem cod. de barras",
+            prod_preco: parseFloat(valorProduto.replace(',', '.')).toFixed(2).toString().replace('.', ','),
+            quantidade: 1
+        };
+
+        setProdutos([...produtos, novoProduto]);
+        setTotal(prevTotal => prevTotal + parseFloat(valorProduto.replace(',', '.')));
+        setValorProduto('');
+        setShowModal(false);
+    };
+
     return (
         <div className='Tela-Vendas'>
-
             <Beforeunload onBeforeunload={(event) => {
                 if (produtos.length > 0) {
                     event.preventDefault();
-                    //setOpenDialog(true);
                     return "Deseja mesmo cancelar a venda?";
                 }
             }} />
-
 
             <h1>Tela de Vendas</h1>
             {aviso && <Alert variant="warning">{aviso}</Alert>}
@@ -130,6 +139,7 @@ const TelaVendas = () => {
                             value={barcode}
                             onChange={(event) => setBarcode(event.target.value)}
                         />
+                        <div className='text-Venda-AddInfor'>(F2: Adicionar produto sem código)</div>
                     </Form.Group>
                 </Form>
             </div>
@@ -152,15 +162,15 @@ const TelaVendas = () => {
                     </thead>
                     <tbody>
                         {produtos.map((produto, index) => (
-                            <tr key={produto.id}>
+                            <tr key={index}>
                                 <td>
                                     {produto.prod_nome}
                                     <br />
                                     <div className='text-Venda-AddInfor'>({produto.prod_add_infor})</div>
                                 </td>
                                 <td>{produto.quantidade}x</td>
-                                <td>R$ {FormataValor(produto.unidade_preco, '.', ',')}</td>
                                 <td>R$ {FormataValor(produto.prod_preco, '.', ',')}</td>
+                                <td>R$ {FormataValor((parseFloat(produto.prod_preco.replace(',', '.')) * produto.quantidade).toFixed(2), '.', ',')}</td>
                                 <td>
                                     <BotaoRemover onClick={() => handleRemove(index)} />
                                 </td>
@@ -169,6 +179,37 @@ const TelaVendas = () => {
                     </tbody>
                 </table>
             </div>
+            <Modal show={showModal} onHide={handleModalClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Adicionar Produto Manualmente</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form.Group controlId="formValorProduto">
+                        <Form.Label>Valor</Form.Label>
+                        <InputGroup className="mb-3">
+                        <InputGroup.Text>R$</InputGroup.Text>
+                        <Form.Control
+                            type="number"
+                            value={valorProduto}
+                            onChange={(e) => setValorProduto(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleModalSave();
+                                }
+                            }}
+                        />
+                        </InputGroup>
+                    </Form.Group>
+                </Modal.Body>
+                <Modal.Footer className='modal-Footer-Buttons-ProdutoSemCodigo'>
+                    <Button variant="secondary" onClick={handleModalClose}>
+                        Fechar
+                    </Button>
+                    <Button variant="primary" onClick={handleModalSave}>
+                        Adicionar
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 };

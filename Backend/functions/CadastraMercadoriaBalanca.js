@@ -2,22 +2,42 @@ const CompletaCodBarras = require('./CompletaCodBarras');
 const FormataValor = require('./FormataValor');
 
 async function CadastraMercadoriaBalanca(DBconnection, mercadoria) {
-    try {
 
-        mercadoria.codigoBarras = CompletaCodBarras(mercadoria.codigoBarras);
-        mercadoria.nome = mercadoria.nome.toUpperCase();
+    mercadoria.codigoBarras = CompletaCodBarras(mercadoria.codigoBarras);
+    mercadoria.nome = mercadoria.nome.toUpperCase();
+
+    try {
+        // Verificar se o código de barras já está cadastrado
+        const sqlConsulta = 'SELECT prod_cod FROM balanca WHERE prod_cod = ?';
+        const valuesConsulta = [mercadoria.codigoBarras];
+    
+        // Executando a consulta
+        const [rows] = await DBconnection.query(sqlConsulta, valuesConsulta);
+    
+        if (rows.length > 0) {
+          return { mensagem: 'Mercadoria já Cadastrado' };
+        }
+      } catch (error) {
+        console.error('Erro ao verificar mercadoria:', error);
+        return { erro: 'Erro ao verificar mercadoria' };
+      }
+
+
+    try {
         // Preparando a consulta SQL
-        const sql = 'INSERT INTO balanca (prod_nome, prod_cod) VALUES (?, ?)';
+        const sqlInsert = 'INSERT INTO balanca (prod_nome, prod_cod) VALUES (?, ?)';
   
         // Valores para a consulta
-        const values = [mercadoria.nome, mercadoria.codigoBarras];
+        const valuesInsert = [mercadoria.nome, mercadoria.codigoBarras];
   
         // Executando a consulta
-        await DBconnection.query(sql, values);
+        await DBconnection.query(sqlInsert, valuesInsert);
   
         console.log('Mercadoria de Balança Cadastrada com sucesso!');
+        return { mensagem: 'Produto Cadastrado com sucesso!' };
     } catch (error) {
         console.error('Erro ao cadastrar mercadoria:', error);
+        return { erro: 'Erro ao cadastrar produto' };
     } finally {
         // Fechando a conexão, se necessário
         // await DBconnection.end();

@@ -80,3 +80,16 @@ tr:nth-child(even) {
     color: whitesmoke;
     background-color:   #b3001bff;
   }
+
+
+  .modal-Footer-Buttons-ProdutoSemCodigo{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    width: 100%;
+  }

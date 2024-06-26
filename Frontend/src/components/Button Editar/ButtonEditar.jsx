@@ -107,7 +107,7 @@ const ButtonEditar = ({ produto, onEdit }) => {
             </Modal>
             <Snackbar open={showTemporaryModal} autoHideDuration={3000} onClose={handleClose}>
                 <Alert
-                    className='alert-Editar'
+                    className='alert-Snackbar'
                     severity="success">
                     Produto Atualizado com <b>Sucesso</b>
                 </Alert>

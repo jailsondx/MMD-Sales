@@ -51,9 +51,9 @@ const ButtonApagar = ({ produto, onDelete }) => {
             </Modal>
             <Snackbar open={showTemporaryModal} autoHideDuration={3000} onClose={handleClose}>
                 <Alert
-                    className='alert-Editar'
+                    className='alert-Snackbar'
                     severity="success">
-                    Produto Apagado com <b>Sucesso</b>
+                    Produto Apagado com <b>Sucesso</b> Atualize a pagina
                 </Alert>
             </Snackbar>
         </>

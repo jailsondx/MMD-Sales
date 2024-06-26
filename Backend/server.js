@@ -46,34 +46,49 @@ const envPathFront = path.join(__dirname, '../Frontend/.env');
 // Caminho para o arquivo .env do frontend
 const envPathBack = path.join(__dirname, './.env');
 
+
 // Rota para receber os dados
-app.post('/api/CadastroProduto', (req, res) => {
+app.post('/api/CadastroProduto', async (req, res) => {
   const data = req.body;
   const produto = data.produto;
 
-  //Limpa o Console
+  // Limpa o Console
   console.clear();
 
   console.log('Informacoes do Produto:', produto);
-  res.send({ Status: 'Recebido com sucesso', Dados: produto });
 
-  //Funcao que faz o cadastro no DB
-  CadastraProduto(DBconnection, produto);
+  try {
+    // Função que faz o cadastro no DB
+    const statusCadastro = await CadastraProduto(DBconnection, produto, res);
+
+    // Respondendo ao cliente
+    res.send(statusCadastro);
+  } catch (error) {
+    console.error('Erro no cadastro do produto:', error);
+    res.status(500).send('Erro no cadastro do produto');
+  }
 });
 
+
 // Rota para receber os dados de Mercadorias de Balança
-app.post('/api/CadastroMercadoriaBalanca', (req, res) => {
+app.post('/api/CadastroMercadoriaBalanca', async (req, res) => {
   const data = req.body;
-  const mercadoria = data.produto;
+  const mercadoria = data.mercadoria;
 
   //Limpa o Console
   console.clear();
 
   console.log('Informacoes da Mercadoria:', mercadoria);
-  res.send({ Status: 'Recebido com sucesso', Dados: mercadoria });
+  try {
+    // Função que faz o cadastro no DB
+    const statusCadastro = await CadastraMercadoriaBalanca(DBconnection, mercadoria, res);
 
-  //Funcao que faz o cadastro no DB
-  CadastraMercadoriaBalanca(DBconnection, mercadoria);
+    // Respondendo ao cliente
+    res.send(statusCadastro);
+  } catch (error) {
+    console.error('Erro no cadastro da mercadoria:', error);
+    res.status(500).send('Erro no cadastro da mercadoria');
+  }
 });
 
 // Rota para receber os dados
