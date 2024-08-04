@@ -1,6 +1,6 @@
 const FormataValor = require("./FormataValor");
 
-async function AdicionaProduto(DBconnection, codBarras, res) {
+async function AdicionaProduto(DBconnection, codBarras) {
     try {
         const codigo_barras = codBarras.barcode;
 
@@ -10,17 +10,17 @@ async function AdicionaProduto(DBconnection, codBarras, res) {
 
         // Manipular o valor de prod_preco
         const updatedRows = rows.map(row => {
-            //row.prod_preco = FormataValor(row.prod_preco, '.', ',');
+            // row.prod_preco = FormataValor(row.prod_preco, '.', ',');
             return row;
         });
         
         // Log para verificar os dados após formatação
-        //console.log('Dados formatados:', updatedRows);
+        // console.log('Dados formatados:', updatedRows);
 
-        res.json(updatedRows);
+        return updatedRows;
     } catch (error) {
         console.error('Erro ao buscar produtos:', error);
-        res.status(500).send('Erro ao buscar produtos');
+        throw new Error('Erro ao buscar produtos');
     }
 }
 

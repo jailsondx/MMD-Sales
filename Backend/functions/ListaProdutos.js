@@ -2,7 +2,7 @@ const FormataValor = require("./FormataValor");
 
 async function ListaProdutos(DBconnection, res) {
     try {
-        const sql = 'SELECT * FROM produtos';
+        const sql = 'SELECT * FROM produtos ORDER BY id DESC';
         const [rows] = await DBconnection.query(sql);
 
         // Manipular o valor de prod_preco

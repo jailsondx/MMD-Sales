@@ -4,6 +4,7 @@ async function AtualizaProduto(DBconnection, id, produto) {
     try {
         // Realiza a formatação dos valores
         produto.prod_preco = FormataValor(produto.prod_preco, ',', '.');
+        produto.prod_nome = produto.prod_nome.toUpperCase();
 
         // Preparando a consulta SQL
         const sql = 'UPDATE produtos SET prod_nome = ?, prod_cod = ?, prod_preco = ?, prod_add_infor = ? WHERE id = ?';

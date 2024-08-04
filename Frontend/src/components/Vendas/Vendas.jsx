@@ -3,7 +3,6 @@ import axios from 'axios';
 import { Form, Button, Alert, Modal, InputGroup } from 'react-bootstrap';
 import BotaoRemover from '../Button Remover da Lista/ButtonRemover';
 import { Beforeunload } from 'react-beforeunload';
-
 import './Vendas.css';
 
 function FormataValor(valor, char_troca, char_novo) {
@@ -74,10 +73,12 @@ const TelaVendas = () => {
             }
 
             console.log('Produto:', produto);
+            console.log('Preço:', produto.prod_preco);
 
-            const precoOriginal = parseFloat(produto.prod_preco.replace(',', '.'));
+            const precoOriginal = parseFloat(String(produto.prod_preco).replace(',', '.'));
             const precoMultiplicado = precoOriginal * multiplicador;
-            produto.prod_preco = precoMultiplicado.toFixed(2).toString().replace('.', ',');
+            produto.prod_preco = precoOriginal.toFixed(2).toString().replace('.', ','); // Manter valor unitário original
+            produto.valor_total = precoMultiplicado.toFixed(2).toString().replace('.', ','); // Adicionar valor total
             produto.quantidade = multiplicador;
 
             setProdutos([...produtos, produto]);
@@ -87,15 +88,15 @@ const TelaVendas = () => {
             setQuantidade(1); // Resetar a quantidade após usar
 
         } catch (error) {
-            console.error('Erro ao buscar produto:', error);
+            console.error('CATCH: Erro ao buscar produto:', error);
             setError('Erro ao buscar produto. Verifique o código de barras e o servidor.');
         }
     };
 
     const handleRemove = (index) => {
         const produtoRemovido = produtos[index];
-        const precoRemovido = parseFloat(produtoRemovido.prod_preco.replace(',', '.')) / produtoRemovido.quantidade;
-        setTotal(prevTotal => prevTotal - (precoRemovido * produtoRemovido.quantidade));
+        const precoRemovido = parseFloat(String(produtoRemovido.prod_preco).replace(',', '.')) * produtoRemovido.quantidade;
+        setTotal(prevTotal => prevTotal - precoRemovido);
 
         const novosProdutos = produtos.filter((_, i) => i !== index);
         setProdutos(novosProdutos);
@@ -107,6 +108,7 @@ const TelaVendas = () => {
         const novoProduto = {
             prod_nome: "Produto sem cod. de barras",
             prod_preco: parseFloat(valorProduto.replace(',', '.')).toFixed(2).toString().replace('.', ','),
+            valor_total: parseFloat(valorProduto.replace(',', '.')).toFixed(2).toString().replace('.', ','), // Adicionar valor total
             quantidade: 1
         };
 
@@ -135,9 +137,10 @@ const TelaVendas = () => {
                         <Form.Label>Código de Barras</Form.Label>
                         <Form.Control
                             className='input-Adicao-Produto'
-                            type="number"
+                            type="text"
                             value={barcode}
                             onChange={(event) => setBarcode(event.target.value)}
+                            autoComplete='off'
                         />
                         <div className='text-Venda-AddInfor'>(F2: Adicionar produto sem código)</div>
                     </Form.Group>
@@ -162,15 +165,15 @@ const TelaVendas = () => {
                     </thead>
                     <tbody>
                         {produtos.map((produto, index) => (
-                            <tr key={index}>
+                            <tr key={`${produto.prod_cod}-${index}`}>
                                 <td>
                                     {produto.prod_nome}
                                     <br />
                                     <div className='text-Venda-AddInfor'>({produto.prod_add_infor})</div>
                                 </td>
                                 <td>{produto.quantidade}x</td>
-                                <td>R$ {FormataValor(produto.prod_preco, '.', ',')}</td>
-                                <td>R$ {FormataValor((parseFloat(produto.prod_preco.replace(',', '.')) * produto.quantidade).toFixed(2), '.', ',')}</td>
+                                <td>R$ {produto.prod_preco}</td>
+                                <td>R$ {produto.valor_total}</td>
                                 <td>
                                     <BotaoRemover onClick={() => handleRemove(index)} />
                                 </td>
@@ -189,7 +192,7 @@ const TelaVendas = () => {
                         <InputGroup className="mb-3">
                         <InputGroup.Text>R$</InputGroup.Text>
                         <Form.Control
-                            type="number"
+                            type="text"
                             value={valorProduto}
                             onChange={(e) => setValorProduto(e.target.value)}
                             onKeyDown={(e) => {

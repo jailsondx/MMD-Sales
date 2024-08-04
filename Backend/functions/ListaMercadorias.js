@@ -2,7 +2,7 @@ const FormataValor = require("./FormataValor");
 
 async function ListaMercadorias(DBconnection, res) {
     try {
-        const sql = 'SELECT * FROM balanca';
+        const sql = 'SELECT * FROM balanca ORDER BY id DESC';
         const [rows] = await DBconnection.query(sql);
 
         res.json(rows);

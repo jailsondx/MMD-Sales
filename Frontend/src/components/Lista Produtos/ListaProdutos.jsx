@@ -68,6 +68,7 @@ const ListaProdutos = () => {
     const handleEdit = (editedProduct) => {
         setProdutos(produtos.map(produto => (produto.id === editedProduct.id ? editedProduct : produto)));
         setProdutosFiltrados(produtosFiltrados.map(produto => (produto.id === editedProduct.id ? editedProduct : produto)));
+        window.location.reload();
     };
 
     const handleDelete = (productId) => {

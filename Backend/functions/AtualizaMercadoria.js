@@ -1,5 +1,6 @@
 async function AtualizaMercadoria(DBconnection, id, mercadoria) {
     try {
+        mercadoria.prod_nome = mercadoria.prod_nome.toUpperCase();
 
         // Preparando a consulta SQL
         const sql = 'UPDATE balanca SET prod_nome = ?, prod_cod = ? WHERE id = ?';

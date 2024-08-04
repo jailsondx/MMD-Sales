@@ -68,6 +68,7 @@ const ListaMercadorias = () => {
     const handleEdit = (editedProduct) => {
         setProdutos(mercadorias.map(mercadoria => (mercadoria.id === editedProduct.id ? editedProduct : mercadoria)));
         setProdutosFiltrados(mercadoriasFiltrados.map(mercadoria => (mercadoria.id === editedProduct.id ? editedProduct : mercadoria)));
+        window.location.reload();
     };
 
     const handleDelete = (productId) => {

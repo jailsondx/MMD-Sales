@@ -191,9 +191,13 @@ app.get('/api/produtos/vendas', async (req, res) => {
 
       // Verifica se o codBarras inicia com o número 2
       if (produtoAdicionado.barcode.startsWith(2)) {
-        const produto_balanca = await PesquisaNaBalanca(DBconnection,produtoAdicionado,res);
+        const produto_balanca = await PesquisaNaBalanca(DBconnection,produtoAdicionado);
+        console.log('BALANCA', produto_balanca);
+        res.json(produto_balanca);
     } else {
-        const produto = await AdicionaProduto(DBconnection, produtoAdicionado,res);
+        const produto = await AdicionaProduto(DBconnection, produtoAdicionado);
+        console.log('PRODUTO', produto);
+        res.json(produto);
     }
 });
 

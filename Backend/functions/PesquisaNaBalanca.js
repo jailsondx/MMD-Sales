@@ -1,7 +1,6 @@
 const FormataValor = require("./FormataValor");
 
-async function PesquisaNaBalanca(DBconnection,codBarras,res) {
-    
+async function PesquisaNaBalanca(DBconnection, codBarras) {
     const codigo_barras = codBarras.barcode;
 
     // Separando o código após o número 2
@@ -28,22 +27,21 @@ async function PesquisaNaBalanca(DBconnection,codBarras,res) {
 
         // Manipular o valor de prod_preco
         const updatedRows = rows.map(row => {
-            //row.prod_preco = FormataValor(row.prod_preco, '.', ',');
-            row.prod_preco = valorTotal;
+            row.prod_preco = FormataValor(valorTotal.toFixed(2).toString(), '.', ',');
             return row;
         });
 
         const produto = {
             'Produto': updatedRows[0].prod_nome,
             'Valor Pesado': updatedRows[0].prod_preco
-          };
-          
+        };
+
         console.table([produto]);
-        res.json(updatedRows);
+        return updatedRows;
 
     } catch (error) {
         console.error('Erro ao buscar produto de Balanca:', error);
-        res.status(500).send('Erro ao buscar produto de Balanca');
+        throw new Error('Erro ao buscar produto de Balanca');
     }
 }
 

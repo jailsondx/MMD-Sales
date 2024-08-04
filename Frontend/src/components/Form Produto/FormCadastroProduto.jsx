@@ -1,9 +1,8 @@
-import { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { Alert, Snackbar } from '@mui/material';
-
 import './FormCadastroProduto.css';
 
 function FormCadastroProduto() {
@@ -14,6 +13,14 @@ function FormCadastroProduto() {
         preco: '',
         informacoesAdicionais: ''
     });
+
+    const nomeInputRef = useRef(null);
+
+    useEffect(() => {
+        if (nomeInputRef.current) {
+            nomeInputRef.current.focus();
+        }
+    }, []);
 
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -36,7 +43,6 @@ function FormCadastroProduto() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        // Limpa o Console
         console.clear();
         console.table([produto]);
 
@@ -48,7 +54,6 @@ function FormCadastroProduto() {
                 setSnackbarMessage(response.data.mensagem);
                 setSnackbarSeverity('error');
             } else {
-                // Define a mensagem de sucesso
                 setSnackbarMessage(response.data.mensagem || 'Produto Cadastrado com Sucesso');
                 setSnackbarSeverity('success');
             }
@@ -56,14 +61,10 @@ function FormCadastroProduto() {
         } catch (error) {
             console.error('Houve um erro ao enviar as informacoes!', error);
             
-            // Define a mensagem de erro
             setSnackbarMessage(error.response?.data?.erro || 'Erro ao cadastrar produto');
             setSnackbarSeverity('error');
         } finally {
-            // Exibe a mensagem no Snackbar
             setShowTemporaryModal(true);
-
-            // Resetar os valores dos campos
             setProduto({
                 nome: '',
                 codigoBarras: '',
@@ -85,6 +86,7 @@ function FormCadastroProduto() {
                             <Form.Group controlId="formDescricaoProduto">
                                 <Form.Label>Descrição do Produto:</Form.Label>
                                 <Form.Control
+                                    ref={nomeInputRef}
                                     className='input-Cadastro'
                                     type="text"
                                     name="nome"

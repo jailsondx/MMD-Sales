@@ -1,8 +1,15 @@
-import React, { useState } from 'react';
-import './PesquisaProduto.css'
+import React, { useState, useRef, useEffect } from 'react';
+import './PesquisaProduto.css';
 
 const PesquisaProduto = ({ onSearch }) => {
     const [query, setQuery] = useState('');
+    const searchInputRef = useRef(null);
+
+    useEffect(() => {
+        if (searchInputRef.current) {
+            searchInputRef.current.focus();
+        }
+    }, []);
 
     const handleInputChange = (e) => {
         setQuery(e.target.value);
@@ -11,7 +18,9 @@ const PesquisaProduto = ({ onSearch }) => {
 
     return (
         <div className='Pesquisa-Prod'>
-            <input className='input-Pesquisa'
+            <input
+                ref={searchInputRef}
+                className='input-Pesquisa'
                 type='text'
                 value={query}
                 onChange={handleInputChange}
