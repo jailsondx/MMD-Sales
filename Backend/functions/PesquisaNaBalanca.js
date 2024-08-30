@@ -25,6 +25,11 @@ async function PesquisaNaBalanca(DBconnection, codBarras) {
 
         const [rows] = await DBconnection.query(sql, codigoProduto);
 
+        // Verifica se a consulta retornou algum resultado
+        if (rows.length === 0) {
+            return []; // Retorna um array vazio se não houver registros
+        }
+
         // Manipular o valor de prod_preco
         const updatedRows = rows.map(row => {
             row.prod_preco = FormataValor(valorTotal.toFixed(2).toString(), '.', ',');

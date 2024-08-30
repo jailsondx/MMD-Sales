@@ -103,7 +103,7 @@ function FormCadastroMercadoria() {
 
                         <div className='formCampo'>
                             <Form.Group controlId="formCodigoBarras">
-                                <Form.Label>Código de Barras:</Form.Label>
+                                <Form.Label>Código de Balança:</Form.Label>
                                 <Form.Control
                                     className='input-Cadastro'
                                     type="number"
@@ -111,7 +111,7 @@ function FormCadastroMercadoria() {
                                     autoComplete='no'
                                     value={mercadoria.codigoBarras}
                                     onChange={handleChange}
-                                    placeholder="Digite o código de barras"
+                                    placeholder="Digite o código da balança"
                                     required
                                 />
                             </Form.Group>

@@ -8,12 +8,17 @@ async function AdicionaProduto(DBconnection, codBarras) {
 
         const [rows] = await DBconnection.query(sql, codigo_barras);
 
+        // Verifica se a consulta retornou algum resultado
+        if (rows.length === 0) {
+            return []; // Retorna um array vazio se não houver registros
+        }
+
         // Manipular o valor de prod_preco
         const updatedRows = rows.map(row => {
             // row.prod_preco = FormataValor(row.prod_preco, '.', ',');
             return row;
         });
-        
+
         // Log para verificar os dados após formatação
         // console.log('Dados formatados:', updatedRows);
 

@@ -1,19 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { Form, Button, Alert, Modal, InputGroup } from 'react-bootstrap';
-import BotaoRemover from '../Button Remover da Lista/ButtonRemover';
+import { Form, Button, Alert } from 'react-bootstrap';
 import { Beforeunload } from 'react-beforeunload';
 import './Vendas.css';
+import FormataValor from './FormataValor';
+import FormataTotal from './FormataTotal';
+import ProdutoList from './ProdutoList';
+import ModalAdicionarProduto from './ModalAdicionarProduto';
+import ModalTroco from './ModalTroco';
 
-function FormataValor(valor, char_troca, char_novo) {
-    return valor.replace(char_troca, char_novo);
-}
 
-function FormataTotal(valor) {
-    let partes = valor.toString().split(".");
-    partes[0] = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    return partes.join(",");
-}
 
 const TelaVendas = () => {
     const [barcode, setBarcode] = useState('');
@@ -24,14 +20,27 @@ const TelaVendas = () => {
     const [aviso, setAviso] = useState('');
     const [multiplicador, setMultiplicador] = useState(1);
 
-    // Estados para o modal de adição manual de produto
     const [showModal, setShowModal] = useState(false);
     const [valorProduto, setValorProduto] = useState('');
 
+    const [showTrocoModal, setShowTrocoModal] = useState(false);
+    const [valorRecebido, setValorRecebido] = useState('');
+    const [troco, setTroco] = useState(null);
+
+    const inputAdicaoRef = useRef(null);
+    const inputModalRef = useRef(null);
+    const inputTrocoRef = useRef(null);
+
     useEffect(() => {
+        if (inputAdicaoRef.current) {
+            inputAdicaoRef.current.focus();
+        }
+
         const handleKeyDown = (event) => {
             if (event.key === 'F2') {
                 setShowModal(true);
+            } else if (event.key === 'F10') {
+                setShowTrocoModal(true);
             }
         };
 
@@ -41,6 +50,14 @@ const TelaVendas = () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
     }, []);
+
+    useEffect(() => {
+        if (showModal && inputModalRef.current) {
+            inputModalRef.current.focus();
+        } else if (showTrocoModal && inputTrocoRef.current) {
+            inputTrocoRef.current.focus();
+        }
+    }, [showModal, showTrocoModal]);
 
     const handleSearch = async (event) => {
         event.preventDefault();
@@ -52,8 +69,7 @@ const TelaVendas = () => {
             return;
         }
 
-        // Verifica se o input é um único dígito
-        if (barcode.length <= 3 && !isNaN(barcode)) {
+        if ((barcode > 0 && barcode.length <= 3) && !isNaN(barcode)) {
             setMultiplicador(parseInt(barcode, 10));
             setQuantidade(parseInt(barcode, 10));
             setBarcode('');
@@ -66,26 +82,23 @@ const TelaVendas = () => {
                 params: { barcode }
             });
 
-            const produto = response.data[0]; // Ajuste aqui para pegar o primeiro item da lista
+            const produto = response.data[0];
             if (!produto) {
                 setError('Produto não encontrado.');
                 return;
             }
 
-            console.log('Produto:', produto);
-            console.log('Preço:', produto.prod_preco);
-
             const precoOriginal = parseFloat(String(produto.prod_preco).replace(',', '.'));
             const precoMultiplicado = precoOriginal * multiplicador;
-            produto.prod_preco = precoOriginal.toFixed(2).toString().replace('.', ','); // Manter valor unitário original
-            produto.valor_total = precoMultiplicado.toFixed(2).toString().replace('.', ','); // Adicionar valor total
+            produto.prod_preco = precoOriginal.toFixed(2).toString().replace('.', ',');
+            produto.valor_total = precoMultiplicado.toFixed(2).toString().replace('.', ',');
             produto.quantidade = multiplicador;
 
             setProdutos([...produtos, produto]);
             setTotal(prevTotal => prevTotal + precoMultiplicado);
             setBarcode('');
-            setMultiplicador(1); // Resetar o multiplicador após usar
-            setQuantidade(1); // Resetar a quantidade após usar
+            setMultiplicador(1);
+            setQuantidade(1);
 
         } catch (error) {
             console.error('CATCH: Erro ao buscar produto:', error);
@@ -108,7 +121,7 @@ const TelaVendas = () => {
         const novoProduto = {
             prod_nome: "Produto sem cod. de barras",
             prod_preco: parseFloat(valorProduto.replace(',', '.')).toFixed(2).toString().replace('.', ','),
-            valor_total: parseFloat(valorProduto.replace(',', '.')).toFixed(2).toString().replace('.', ','), // Adicionar valor total
+            valor_total: parseFloat(valorProduto.replace(',', '.')).toFixed(2).toString().replace('.', ','),
             quantidade: 1
         };
 
@@ -116,6 +129,18 @@ const TelaVendas = () => {
         setTotal(prevTotal => prevTotal + parseFloat(valorProduto.replace(',', '.')));
         setValorProduto('');
         setShowModal(false);
+    };
+
+    const handleTrocoModalClose = () => {
+        setShowTrocoModal(false);
+        setValorRecebido('');
+        setTroco(null);
+    };
+
+    const handleTrocoCalculate = () => {
+        const valor = parseFloat(valorRecebido.replace(',', '.'));
+        const trocoCalculado = valor - total;
+        setTroco(trocoCalculado);
     };
 
     return (
@@ -130,7 +155,7 @@ const TelaVendas = () => {
             <h1>Tela de Vendas</h1>
             {aviso && <Alert variant="warning">{aviso}</Alert>}
             {error && <Alert variant="danger">{error}</Alert>}
-            
+
             <div className='form-Adicao-Produto'>
                 <Form onSubmit={handleSearch}>
                     <Form.Group controlId="formBarcode">
@@ -141,8 +166,10 @@ const TelaVendas = () => {
                             value={barcode}
                             onChange={(event) => setBarcode(event.target.value)}
                             autoComplete='off'
+                            ref={inputAdicaoRef}
                         />
                         <div className='text-Venda-AddInfor'>(F2: Adicionar produto sem código)</div>
+                        <div className='text-Venda-AddInfor'>(F10: Calcular troco e finalizar venda)</div>
                     </Form.Group>
                 </Form>
             </div>
@@ -150,69 +177,27 @@ const TelaVendas = () => {
             <div className='text-Total'>
                 Total: <b>R$ {FormataTotal(total.toFixed(2))}</b>
             </div>
-            
-            <h2>Produtos</h2>
-            <div className='table-Lista-Produtos-Venda'>
-                <table>
-                    <thead className='table-Head'>
-                        <tr>
-                            <th className='Lista-Nome-Prod'>Produto</th>
-                            <th className='Lista-Quantidade'>Qtd</th>
-                            <th className='Lista-Preco'>Valor Un</th>
-                            <th className='Lista-Preco'>Valor Total</th>
-                            <th className='Lista-Acao'>Ação</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {produtos.map((produto, index) => (
-                            <tr key={`${produto.prod_cod}-${index}`}>
-                                <td>
-                                    {produto.prod_nome}
-                                    <br />
-                                    <div className='text-Venda-AddInfor'>({produto.prod_add_infor})</div>
-                                </td>
-                                <td>{produto.quantidade}x</td>
-                                <td>R$ {produto.prod_preco}</td>
-                                <td>R$ {produto.valor_total}</td>
-                                <td>
-                                    <BotaoRemover onClick={() => handleRemove(index)} />
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-            <Modal show={showModal} onHide={handleModalClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Adicionar Produto Manualmente</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form.Group controlId="formValorProduto">
-                        <Form.Label>Valor</Form.Label>
-                        <InputGroup className="mb-3">
-                        <InputGroup.Text>R$</InputGroup.Text>
-                        <Form.Control
-                            type="text"
-                            value={valorProduto}
-                            onChange={(e) => setValorProduto(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                    handleModalSave();
-                                }
-                            }}
-                        />
-                        </InputGroup>
-                    </Form.Group>
-                </Modal.Body>
-                <Modal.Footer className='modal-Footer-Buttons-ProdutoSemCodigo'>
-                    <Button variant="secondary" onClick={handleModalClose}>
-                        Fechar
-                    </Button>
-                    <Button variant="primary" onClick={handleModalSave}>
-                        Adicionar
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+
+            <ProdutoList produtos={produtos} handleRemove={handleRemove} />
+
+            <ModalAdicionarProduto
+                showModal={showModal}
+                handleModalClose={handleModalClose}
+                handleModalSave={handleModalSave}
+                valorProduto={valorProduto}
+                setValorProduto={setValorProduto}
+                inputModalRef={inputModalRef}
+            />
+
+            <ModalTroco
+                showTrocoModal={showTrocoModal}
+                handleTrocoModalClose={handleTrocoModalClose}
+                handleTrocoCalculate={handleTrocoCalculate}
+                valorRecebido={valorRecebido}
+                setValorRecebido={setValorRecebido}
+                troco={troco}
+                inputTrocoRef={inputTrocoRef}
+            />
         </div>
     );
 };
