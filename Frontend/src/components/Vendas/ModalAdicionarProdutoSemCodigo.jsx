@@ -1,7 +1,8 @@
 import React from 'react';
 import { Modal, Form, InputGroup, Button } from 'react-bootstrap';
+import './Modais.css';
 
-const ModalAdicionarProduto = ({
+const ModalAdicionarProdutoSemCodigo = ({
     showModal,
     handleModalClose,
     handleModalSave,
@@ -9,6 +10,16 @@ const ModalAdicionarProduto = ({
     setValorProduto,
     inputModalRef
 }) => {
+    const handleSave = () => {
+        // Remove espaços em branco e verifica se o valor é vazio ou zero
+        const trimmedValue = valorProduto.trim();
+        if (trimmedValue === '' || trimmedValue === '0') {
+            alert('O valor do produto não pode estar vazio!');
+            return;
+        }
+        handleModalSave();
+    };
+
     return (
         <Modal show={showModal} onHide={handleModalClose} className="custom-modal">
             <Modal.Header closeButton className="custom-modal-header">
@@ -22,11 +33,12 @@ const ModalAdicionarProduto = ({
                         <Form.Control
                             type="text"
                             value={valorProduto}
+                            autoComplete='off'
                             onChange={(e) => setValorProduto(e.target.value)}
                             ref={inputModalRef}
                             onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
-                                    handleModalSave();
+                                    handleSave();
                                 }
                             }}
                             className="custom-modal-input"
@@ -38,7 +50,7 @@ const ModalAdicionarProduto = ({
                 <Button variant="secondary" onClick={handleModalClose} className="custom-modal-button-secondary">
                     Fechar
                 </Button>
-                <Button variant="primary" onClick={handleModalSave} className="custom-modal-button-primary">
+                <Button variant="primary" onClick={handleSave} className="custom-modal-button-primary">
                     Adicionar
                 </Button>
             </Modal.Footer>
@@ -46,4 +58,4 @@ const ModalAdicionarProduto = ({
     );
 };
 
-export default ModalAdicionarProduto;
+export default ModalAdicionarProdutoSemCodigo;

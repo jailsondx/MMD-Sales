@@ -1,6 +1,6 @@
 {
   "name": "MMD-Sales",
-  "version": "1.0.0",
+  "version": "1.5.0",
   "scripts": {
     "start-all": "docker start MySql-MMD && sleep 5 && npm start",
     "start-docker": "docker start MySql-MMD",

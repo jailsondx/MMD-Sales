@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Form, InputGroup, Button } from 'react-bootstrap';
+import './Modais.css';
 
 const ModalTroco = ({
     showTrocoModal,
@@ -14,6 +15,12 @@ const ModalTroco = ({
     const [calculoFeito, setCalculoFeito] = useState(false);
 
     const handleCalcular = () => {
+        // Remove espaços em branco e verifica se o valor é vazio ou zero
+        const trimmedValue = valorRecebido.trim();
+        if (trimmedValue === '' || trimmedValue === '0') {
+            alert('O valor recebido não pode estar vazio ou ser zero!');
+            return;
+        }
         handleTrocoCalculate();
         setCalculoFeito(true);
     };
@@ -46,6 +53,7 @@ const ModalTroco = ({
                         <Form.Control
                             type="text"
                             value={valorRecebido}
+                            autoComplete='off'
                             onChange={(e) => {
                                 setValorRecebido(e.target.value);
                                 setCalculoFeito(false); // Reseta o estado do cálculo feito se o valor mudar

@@ -6,7 +6,7 @@ import './Vendas.css';
 import FormataValor from './FormataValor';
 import FormataTotal from './FormataTotal';
 import ProdutoList from './ProdutoList';
-import ModalAdicionarProduto from './ModalAdicionarProduto';
+import ModalAdicionarProdutoSemCodigo from './ModalAdicionarProdutoSemCodigo';
 import ModalTroco from './ModalTroco';
 
 
@@ -85,6 +85,7 @@ const TelaVendas = () => {
             const produto = response.data[0];
             if (!produto) {
                 setError('Produto não encontrado.');
+                setBarcode('');
                 return;
             }
 
@@ -174,13 +175,26 @@ const TelaVendas = () => {
                 </Form>
             </div>
 
-            <div className='text-Total'>
-                Total: <b>R$ {FormataTotal(total.toFixed(2))}</b>
+            <div className='Divisao-Telas'>
+                <div className='Tela-Esquerda'>
+                    <div className='text-Total'>
+                        <span>Total: </span>
+                        <span>
+                            <b>R$ {FormataTotal(total.toFixed(2))}</b>
+                        </span>
+
+                    </div>
+                </div>
+
+                <div className='Tela-Direita'>
+                    <ProdutoList produtos={produtos} handleRemove={handleRemove} />
+                </div>
             </div>
+          
 
-            <ProdutoList produtos={produtos} handleRemove={handleRemove} />
 
-            <ModalAdicionarProduto
+
+            <ModalAdicionarProdutoSemCodigo
                 showModal={showModal}
                 handleModalClose={handleModalClose}
                 handleModalSave={handleModalSave}

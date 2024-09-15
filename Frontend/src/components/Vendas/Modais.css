@@ -1,0 +1,51 @@
+.custom-modal .modal-content {
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+.custom-modal-header {
+    background-color: #4a90e2;
+    color: #fff;
+}
+
+.custom-modal-body, .custom-modal-label {
+    color: #fff;
+}
+
+.custom-modal-footer {
+    background-color: rgba(0, 0, 0, 0.7);
+    border-top: 1px solid #ccc;
+}
+
+.custom-modal-button-primary {
+    background-color: #4a90e2;
+    color: #fff;
+    border: none;
+}
+
+.custom-modal-button-secondary {
+    background-color: #999;
+    color: #fff;
+    border: none;
+}
+
+.custom-modal-button-secondary:hover,
+.custom-modal-button-primary:hover {
+    opacity: 0.8;
+}
+
+.troco-result {
+    display: flex;
+    flex-direction: column;
+}
+
+.text-Troco {
+    font-size: 1rem;
+}
+
+.text-Value-Troco {
+    display: flex;
+    justify-content: center;
+    font-size: 4rem;
+}

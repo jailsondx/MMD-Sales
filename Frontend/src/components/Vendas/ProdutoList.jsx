@@ -1,5 +1,6 @@
 import React from 'react';
 import BotaoRemover from '../Button Remover da Lista/ButtonRemover';
+import './ProdutoList.css';
 
 const ProdutoList = ({ produtos, handleRemove }) => {
     return (
@@ -7,11 +8,11 @@ const ProdutoList = ({ produtos, handleRemove }) => {
             <table>
                 <thead className='table-Head'>
                     <tr>
-                        <th className='Lista-Nome-Prod'>Produto</th>
-                        <th className='Lista-Quantidade'>Qtd</th>
-                        <th className='Lista-Preco'>Valor Un</th>
-                        <th className='Lista-Preco'>Valor Total</th>
-                        <th className='Lista-Acao'>Ação</th>
+                        <th className='Lista-Venda-Nome-Prod'>Produto</th>
+                        <th className='Lista-Venda-Quantidade'>Qtd</th>
+                        <th className='Lista-Venda-Preco'>Valor Un</th>
+                        <th className='Lista-Venda-Preco'>Valor Total</th>
+                        <th className='Lista-Venda-Acao'>Ação</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -20,7 +21,9 @@ const ProdutoList = ({ produtos, handleRemove }) => {
                             <td>
                                 {produto.prod_nome}
                                 <br />
-                                <div className='text-Venda-AddInfor'>({produto.prod_add_infor})</div>
+                                {produto.prod_add_infor && (
+                                    <div className='text-Venda-AddInfor'>({produto.prod_add_infor})</div>
+                                )}
                             </td>
                             <td>{produto.quantidade}x</td>
                             <td>R$ {produto.prod_preco}</td>

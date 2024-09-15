@@ -1,60 +1,51 @@
-.Tela-Vendas{
+.Tela-Vendas {
     display: flex;
     flex-direction: column;
-
-
     justify-content: center;
     align-items: center;
     text-align: center;
-
     width: 100vw;
 }
 
-.text-Venda-AddInfor{
+.text-Venda-AddInfor {
     color: gray;
     font-size: 0.7rem;
-
     font-style: italic;
 }
 
-.form-Adicao-Produto{
+.form-Adicao-Produto {
     display: flex;
     flex-direction: row;
-
     justify-content: center;
     align-items: center;
     text-align: center;
-
     width: 40vw;
 }
 
-
-.input-Adicao-Produto{
+.input-Adicao-Produto {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-
     justify-content: center;
     align-items: center;
     text-align: center;
-
     font-size: 2rem;
-
     width: 40vw;
     height: 8vh;
-
     border: 0;
     border-bottom: 2px solid;
-
     background-color: whitesmoke;
 }
 
-.input-Adicao-Produto:focus{
+.input-Adicao-Produto:focus {
     background-color: whitesmoke;
 }
 
 .text-Total {
-    font-size: 10vh;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    font-size: 5vw;
     margin: 3vh;
 }
 
@@ -63,120 +54,21 @@
 }
 
 .text-Total b:hover {
-    border-bottom: 300px #b3001bff;
-    text-decoration-line:underline;
+    text-decoration-line: underline;
     text-underline-offset: 2vh;
 }
 
-.table-Lista-Produtos-Venda{
-    width: 80vw;
-}
-
-tr:nth-child(even) {
-    background-color: #dddddd;
-  }
-
-.table-Head{
-    color: whitesmoke;
-    background-color:   #b3001bff;
-  }
-
-
-  .modal-Footer-Buttons-ProdutoSemCodigo{
+.Divisao-Telas {
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
-
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-
-    width: 100%;
-  }
-
-
-  /*MODAL*/
-
-/* Personalização geral do modal */
-.custom-modal .modal-content {
-    background-color: rgba(0, 0, 0, 0.7);; /* Cor de fundo do modal */
-    border-radius: 10px; /* Bordas arredondadas */
-    border: 1px solid #ccc; /* Cor da borda */
 }
 
-/* Header do modal */
-.custom-modal-header {
-    background-color: #4a90e2; /* Cor de fundo do header */
-    color: #fff; /* Cor do texto no header */
-    border-bottom: 1px solid #ccc; /* Linha separadora */
+.Tela-Esquerda {
+    min-width: 10vw;
+    max-width: 30vw;
 }
 
-/* Título do modal */
-.custom-modal-title {
-    color: #fff; /* Cor do texto do título */
-}
-
-/* Corpo do modal */
-.custom-modal-body {
-    color: #fff; /* Cor do texto no corpo do modal */
-}
-
-
-/* Label do formulário no modal */
-.custom-modal-label {
-    color: #fff; /* Cor do texto do label */
-}
-
-/* DIV do troco */
-.troco-result{
-    display: flex;
-    flex-direction: column;
-}
-
-/* SPAN do texto 'troco' */
-.text-Troco{
-    font-size: 1rem;
-}
-
-/* SPAN do texto que mostra o valor do troco em Reais */
-.text-Value-Troco{
-    display: flex;
-    justify-content: center;
-    font-size: 4rem;
-}
-
-/* Input group text */
-.custom-modal-input-group-text {
-    background-color: #4a90e2; /* Cor de fundo do input group */
-    color: #fff; /* Cor do texto */
-}
-
-/* Input do modal */
-.custom-modal-input {
-    border: 1px solid #4a90e2; /* Cor da borda do input */
-    color: #333; /* Cor do texto */
-}
-
-/* Footer do modal */
-.custom-modal-footer {
-    background-color: rgba(0, 0, 0, 0.7); /* Cor de fundo do footer */
-    border-top: 1px solid #ccc; /* Linha separadora */
-}
-
-/* Botões no footer do modal */
-.custom-modal-button-secondary {
-    background-color: #999; /* Cor de fundo do botão Fechar */
-    color: #fff; /* Cor do texto */
-    border: none;
-}
-
-.custom-modal-button-primary {
-    background-color: #4a90e2; /* Cor de fundo do botão Adicionar */
-    color: #fff; /* Cor do texto */
-    border: none;
-}
-
-.custom-modal-button-secondary:hover,
-.custom-modal-button-primary:hover {
-    opacity: 0.8; /* Efeito de hover */
+.Tela-Direita {
+    width: 70vw;
+    height: 60vh; /* Define altura fixa da tabela */
 }
