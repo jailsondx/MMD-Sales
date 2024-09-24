@@ -3,8 +3,8 @@
     margin: 20px 0;
     border-collapse: collapse;
     table-layout: fixed;
-    max-height: 60vh; /* Defina uma altura máxima */
-    overflow-y: auto;  /* Habilita a rolagem vertical */
+    max-height: 60vh; /* Define uma altura máxima */
+    overflow-y: auto; /* Habilita a rolagem vertical */
 }
 
 .table-Lista-Produtos-Venda table {
@@ -26,6 +26,10 @@
 
 .table-Lista-Produtos-Venda td {
     background-color: #f9f9f9;
+}
+
+.Lista-Venda-ID {
+    width: 5%; /* Ajustado para manter espaço para outras colunas */
 }
 
 .Lista-Venda-Nome-Prod {
@@ -50,6 +54,10 @@
     color: #666;
 }
 
-tr:nth-child(even) {
+.table-Lista-Produtos-Venda tr:nth-child(even) {
     background-color: #dddddd;
+}
+
+.table-Lista-Produtos-Venda .highlight-row {
+    background-color: #ffeb3b; /* Cor de destaque para a linha */
 }

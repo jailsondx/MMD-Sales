@@ -15,12 +15,6 @@ const ModalTroco = ({
     const [calculoFeito, setCalculoFeito] = useState(false);
 
     const handleCalcular = () => {
-        // Remove espaços em branco e verifica se o valor é vazio ou zero
-        const trimmedValue = valorRecebido.trim();
-        if (trimmedValue === '' || trimmedValue === '0') {
-            alert('O valor recebido não pode estar vazio ou ser zero!');
-            return;
-        }
         handleTrocoCalculate();
         setCalculoFeito(true);
     };

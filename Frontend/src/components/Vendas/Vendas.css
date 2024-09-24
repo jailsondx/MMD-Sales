@@ -58,6 +58,11 @@
     text-underline-offset: 2vh;
 }
 
+.li-produtos-removidos{
+    display: flex;
+    font-size: 12px;
+}
+
 .Divisao-Telas {
     display: flex;
     flex-direction: row;

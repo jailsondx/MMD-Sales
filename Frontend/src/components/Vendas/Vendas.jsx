@@ -27,6 +27,8 @@ const TelaVendas = () => {
     const [valorRecebido, setValorRecebido] = useState('');
     const [troco, setTroco] = useState(null);
 
+    const [produtosRemovidos, setProdutosRemovidos] = useState([]); // Novo estado para armazenar produtos removidos
+
     const inputAdicaoRef = useRef(null);
     const inputModalRef = useRef(null);
     const inputTrocoRef = useRef(null);
@@ -107,14 +109,23 @@ const TelaVendas = () => {
         }
     };
 
-    const handleRemove = (index) => {
-        const produtoRemovido = produtos[index];
-        const precoRemovido = parseFloat(String(produtoRemovido.prod_preco).replace(',', '.')) * produtoRemovido.quantidade;
-        setTotal(prevTotal => prevTotal - precoRemovido);
+    const handleRemove = (indexProduto) => {
+        const produtoParaRemover = produtos[indexProduto];
 
-        const novosProdutos = produtos.filter((_, i) => i !== index);
-        setProdutos(novosProdutos);
+        if (produtoParaRemover) {
+            // Subtrai o valor total do produto removido do valor total da venda
+            const valorRemover = parseFloat(produtoParaRemover.valor_total.replace(',', '.'));
+            setTotal(prevTotal => prevTotal - valorRemover);
+
+            // Adiciona o nome do produto removido à lista de produtos removidos
+            setProdutosRemovidos([...produtosRemovidos, produtoParaRemover]);
+
+            // Cria uma nova lista de produtos removendo o produto pelo índice
+            const novosProdutos = produtos.filter((_, index) => index !== indexProduto);
+            setProdutos(novosProdutos);
+        }
     };
+
 
     const handleModalClose = () => setShowModal(false);
 
@@ -182,6 +193,14 @@ const TelaVendas = () => {
                         <span>
                             <b>R$ {FormataTotal(total.toFixed(2))}</b>
                         </span>
+                        <div className='produtos-removidos'>
+                            <h5>Produtos Removidos:</h5>
+                            <ul>
+                                {produtosRemovidos.map((produto, index) => (
+                                    <li className='li-produtos-removidos' key={index}>{produto.quantidade}x {produto.prod_nome} R${produto.valor_total} </li>
+                                ))}
+                            </ul>
+                        </div>
 
                     </div>
                 </div>
@@ -190,7 +209,7 @@ const TelaVendas = () => {
                     <ProdutoList produtos={produtos} handleRemove={handleRemove} />
                 </div>
             </div>
-          
+
 
 
 
