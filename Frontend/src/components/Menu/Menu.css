@@ -1,0 +1,13 @@
+.Logo-Menu{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 5vh;
+    width: auto;
+
+    cursor: pointer;
+}
+
+.Logo-Menu:hover{
+    transform: scale(1.1);
+}

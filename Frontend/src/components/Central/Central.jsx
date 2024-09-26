@@ -4,7 +4,10 @@ function Central() {
 
     return (
       <div className="central">
-        <h1>Bem Vindo</h1>
+        <div className='Logo-Principal'>
+          <img src='/MMD-LOGO.png' className='LogoMMD'></img>
+        </div>
+
       </div>
     )
   }

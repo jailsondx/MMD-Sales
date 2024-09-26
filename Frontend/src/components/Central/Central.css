@@ -1,5 +1,6 @@
 .central{
     display: flex;
+    flex-direction: column;
     
     width: 100vw;
     height: 90vh;
@@ -7,4 +8,9 @@
     justify-content: center;
     align-items: center;
     text-align: center;
+}
+
+.Logo-Principal{
+    height: 50%;
+    width: auto;
 }

@@ -3,13 +3,19 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 
+import './Menu.css';
+
 
 
 function Menu() {
   return (
     <Navbar bg="dark" data-bs-theme="dark">
       <Container>
-        <Navbar.Brand href="/">MMD Sales</Navbar.Brand>
+        <Navbar.Brand href="/">
+        <div className='Logo-Menu'>
+          <img src='/MMD-LOGO.png' className='LogoMMD' alt='Logo do MMD'></img>
+        </div>
+        </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">

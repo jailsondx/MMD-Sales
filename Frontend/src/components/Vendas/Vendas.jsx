@@ -2,12 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Form, Button, Alert } from 'react-bootstrap';
 import { Beforeunload } from 'react-beforeunload';
-import './Vendas.css';
 import FormataValor from './FormataValor';
 import FormataTotal from './FormataTotal';
 import ProdutoList from './ProdutoList';
 import ModalAdicionarProdutoSemCodigo from './ModalAdicionarProdutoSemCodigo';
 import ModalTroco from './ModalTroco';
+
+import './Vendas.css';
 
 
 
@@ -164,7 +165,6 @@ const TelaVendas = () => {
                 }
             }} />
 
-            <h1>Tela de Vendas</h1>
             {aviso && <Alert variant="warning">{aviso}</Alert>}
             {error && <Alert variant="danger">{error}</Alert>}
 
