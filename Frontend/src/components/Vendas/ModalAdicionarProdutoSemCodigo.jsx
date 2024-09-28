@@ -47,12 +47,13 @@ const ModalAdicionarProdutoSemCodigo = ({
                 </Form.Group>
             </Modal.Body>
             <Modal.Footer className="custom-modal-footer">
-                <Button variant="secondary" onClick={handleModalClose} className="custom-modal-button-secondary">
-                    Fechar
-                </Button>
                 <Button variant="primary" onClick={handleSave} className="custom-modal-button-primary">
                     Adicionar
                 </Button>
+                <Button variant="secondary" onClick={handleModalClose} className="custom-modal-button-secondary">
+                    Fechar
+                </Button>
+
             </Modal.Footer>
         </Modal>
     );

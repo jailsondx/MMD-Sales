@@ -1,5 +1,5 @@
 .custom-modal .modal-content {
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.8);
     border-radius: 10px;
     border: 1px solid #ccc;
 }
@@ -14,7 +14,10 @@
 }
 
 .custom-modal-footer {
-    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    background-color: rgba(0, 0, 0, 0.9);
     border-top: 1px solid #ccc;
 }
 
@@ -22,6 +25,7 @@
     background-color: #4a90e2;
     color: #fff;
     border: none;
+    width: 100%;
 }
 
 .custom-modal-button-secondary {
@@ -48,4 +52,37 @@
     display: flex;
     justify-content: center;
     font-size: 4rem;
+}
+
+.div-ProdutosExtra{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-bottom: #fff 2px solid;
+}
+
+.div-Icon-AddProdutoExtra{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 10%;
+    min-width: 50px;
+}
+
+.div-ProdutoExtra-Add{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    text-align: left;
+    width: 60%;
+}
+
+.div-Button-Add{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
 }

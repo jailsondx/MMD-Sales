@@ -19,6 +19,7 @@ const ApagaProduto = require('./functions/ApagaProduto');
 const ApagaMercadoria = require('./functions/ApagaMercadoria');
 const AdicionaProduto = require('./functions/AdicionaProdutoVenda');
 const PesquisaNaBalanca = require('./functions/PesquisaNaBalanca');
+const VerificaProduto = require('./functions/VerificaProduto');
 
 
 const PORT = 3001;
@@ -200,6 +201,27 @@ app.get('/api/produtos/vendas', async (req, res) => {
         res.json(produto);
     }
 });
+
+// Rota para pesquisar produtos por código de barras ou nome
+app.get('/api/produtos/verifica', async (req, res) => {
+  const { query } = req.query;
+
+  try {
+      const produto = await VerificaProduto(DBconnection, query);
+      if (produto.length === 0) {
+          return res.status(404).json({ message: 'Produto não encontrado.' });
+      }
+
+      res.json({
+          success: true,
+          dadosProduto: produto, // Retorna o primeiro produto encontrado
+      });
+  } catch (error) {
+      console.error('Erro ao buscar o produto:', error);
+      res.status(500).json({ success: false, message: 'Erro ao buscar o produto.' });
+  }
+});
+
 
 
 // Obtém o endereço IP local

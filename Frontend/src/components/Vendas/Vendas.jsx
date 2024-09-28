@@ -7,62 +7,82 @@ import FormataTotal from './FormataTotal';
 import ProdutoList from './ProdutoList';
 import ModalAdicionarProdutoSemCodigo from './ModalAdicionarProdutoSemCodigo';
 import ModalTroco from './ModalTroco';
-
+import ModalVerificaProduto from './ModalVerificaProduto';
 import './Vendas.css';
 
-
-
 const TelaVendas = () => {
+    // Estados principais
     const [barcode, setBarcode] = useState('');
     const [produtos, setProdutos] = useState([]);
     const [total, setTotal] = useState(0);
     const [quantidade, setQuantidade] = useState(1);
-    const [error, setError] = useState('');
-    const [aviso, setAviso] = useState('');
     const [multiplicador, setMultiplicador] = useState(1);
-
-    const [showModal, setShowModal] = useState(false);
     const [valorProduto, setValorProduto] = useState('');
-
-    const [showTrocoModal, setShowTrocoModal] = useState(false);
     const [valorRecebido, setValorRecebido] = useState('');
     const [troco, setTroco] = useState(null);
 
-    const [produtosRemovidos, setProdutosRemovidos] = useState([]); // Novo estado para armazenar produtos removidos
+    // Estados para avisos e erros
+    const [error, setError] = useState('');
+    const [aviso, setAviso] = useState('');
 
+    // Estados para os modais
+    const [showModal, setShowModal] = useState(false);
+    const [showTrocoModal, setShowTrocoModal] = useState(false);
+    const [showVerificaProdutoModal, setShowVerificaProduto] = useState(false);
+
+    // Estado para armazenar produtos removidos
+    const [produtosRemovidos, setProdutosRemovidos] = useState([]);
+
+    // Refs para inputs
     const inputAdicaoRef = useRef(null);
     const inputModalRef = useRef(null);
     const inputTrocoRef = useRef(null);
+    const inputVerProdutoRef = useRef(null);
 
+    // Foca no campo de adição de produto quando o componente é montado
     useEffect(() => {
         if (inputAdicaoRef.current) {
             inputAdicaoRef.current.focus();
         }
 
+        // Função para lidar com atalhos de teclado
         const handleKeyDown = (event) => {
-            if (event.key === 'F2') {
-                setShowModal(true);
-            } else if (event.key === 'F10') {
-                setShowTrocoModal(true);
+            switch (event.key) {
+                case 'F2':
+                    setShowModal(true); // Abre modal para adicionar produto sem código de barras
+                    break;
+                case 'F10':
+                    setShowTrocoModal(true); // Abre modal para cálculo de troco
+                    break;
+                case 'F4':
+                    setShowVerificaProduto(true); // Abre modal para verificação de produto
+                    break;
+                default:
+                    break;
             }
         };
 
         window.addEventListener('keydown', handleKeyDown);
 
+        // Remove o listener ao desmontar o componente
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
     }, []);
 
+    // Foca no input correto quando os modais são abertos
     useEffect(() => {
         if (showModal && inputModalRef.current) {
             inputModalRef.current.focus();
         } else if (showTrocoModal && inputTrocoRef.current) {
             inputTrocoRef.current.focus();
-        }
-    }, [showModal, showTrocoModal]);
+        } else if (showVerificaProdutoModal && inputVerProdutoRef.current) {
+            inputVerProdutoRef.current.focus();
+        } 
+    }, [showModal, showTrocoModal, showVerificaProdutoModal]);
 
-    const handleSearch = async (event) => {
+    // Função para buscar o produto pelo código de barras
+    const handleAddProduto = async (event) => {
         event.preventDefault();
         setAviso('');
         setError('');
@@ -72,6 +92,7 @@ const TelaVendas = () => {
             return;
         }
 
+        // Verifica se é uma quantidade de múltiplos
         if ((barcode > 0 && barcode.length <= 3) && !isNaN(barcode)) {
             setMultiplicador(parseInt(barcode, 10));
             setQuantidade(parseInt(barcode, 10));
@@ -80,6 +101,7 @@ const TelaVendas = () => {
             return;
         }
 
+        // Busca produto via API
         try {
             const response = await axios.get(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/produtos/vendas`, {
                 params: { barcode }
@@ -92,6 +114,7 @@ const TelaVendas = () => {
                 return;
             }
 
+            // Formata preço e atualiza o estado
             const precoOriginal = parseFloat(String(produto.prod_preco).replace(',', '.'));
             const precoMultiplicado = precoOriginal * multiplicador;
             produto.prod_preco = precoOriginal.toFixed(2).toString().replace('.', ',');
@@ -105,31 +128,34 @@ const TelaVendas = () => {
             setQuantidade(1);
 
         } catch (error) {
-            console.error('CATCH: Erro ao buscar produto:', error);
+            console.error('Erro ao buscar produto:', error);
             setError('Erro ao buscar produto. Verifique o código de barras e o servidor.');
         }
     };
 
+    const handleAddProdutoExtra = (produto) => {
+        setProdutos([...produtos, produto]);
+        setTotal(prevTotal => prevTotal + parseFloat(produto.valor_total.replace(',', '.')));
+    };
+    
+
+    // Função para remover produto
     const handleRemove = (indexProduto) => {
         const produtoParaRemover = produtos[indexProduto];
 
         if (produtoParaRemover) {
-            // Subtrai o valor total do produto removido do valor total da venda
             const valorRemover = parseFloat(produtoParaRemover.valor_total.replace(',', '.'));
             setTotal(prevTotal => prevTotal - valorRemover);
 
-            // Adiciona o nome do produto removido à lista de produtos removidos
             setProdutosRemovidos([...produtosRemovidos, produtoParaRemover]);
 
-            // Cria uma nova lista de produtos removendo o produto pelo índice
             const novosProdutos = produtos.filter((_, index) => index !== indexProduto);
             setProdutos(novosProdutos);
         }
     };
 
-
+    // Funções de modal
     const handleModalClose = () => setShowModal(false);
-
     const handleModalSave = () => {
         const novoProduto = {
             prod_nome: "Produto sem cod. de barras",
@@ -169,7 +195,7 @@ const TelaVendas = () => {
             {error && <Alert variant="danger">{error}</Alert>}
 
             <div className='form-Adicao-Produto'>
-                <Form onSubmit={handleSearch}>
+                <Form onSubmit={handleAddProduto}>
                     <Form.Group controlId="formBarcode">
                         <Form.Label>Código de Barras</Form.Label>
                         <Form.Control
@@ -180,8 +206,8 @@ const TelaVendas = () => {
                             autoComplete='off'
                             ref={inputAdicaoRef}
                         />
-                        <div className='text-Venda-AddInfor'>(F2: Adicionar produto sem código)</div>
-                        <div className='text-Venda-AddInfor'>(F10: Calcular troco e finalizar venda)</div>
+                        <div className='text-Venda-AddInfor'>(F2: Adicionar produto sem código) | (F4: Consultar produto)</div>
+                        <div className='text-Venda-AddInfor'>(F5: Finalizar venda) | (F10: Calcular troco e finalizar venda)</div>
                     </Form.Group>
                 </Form>
             </div>
@@ -190,18 +216,15 @@ const TelaVendas = () => {
                 <div className='Tela-Esquerda'>
                     <div className='text-Total'>
                         <span>Total: </span>
-                        <span>
-                            <b>R$ {FormataTotal(total.toFixed(2))}</b>
-                        </span>
+                        <span><b>R$ {FormataTotal(total.toFixed(2))}</b></span>
                         <div className='produtos-removidos'>
                             <h5>Produtos Removidos:</h5>
                             <ul>
                                 {produtosRemovidos.map((produto, index) => (
-                                    <li className='li-produtos-removidos' key={index}>{produto.quantidade}x {produto.prod_nome} R${produto.valor_total} </li>
+                                    <li className='li-produtos-removidos' key={index}>{produto.quantidade}x {produto.prod_nome} R$ {produto.valor_total} </li>
                                 ))}
                             </ul>
                         </div>
-
                     </div>
                 </div>
 
@@ -210,9 +233,7 @@ const TelaVendas = () => {
                 </div>
             </div>
 
-
-
-
+            {/* Modais */}
             <ModalAdicionarProdutoSemCodigo
                 showModal={showModal}
                 handleModalClose={handleModalClose}
@@ -231,6 +252,16 @@ const TelaVendas = () => {
                 troco={troco}
                 inputTrocoRef={inputTrocoRef}
             />
+
+            <ModalVerificaProduto
+                showModal={showVerificaProdutoModal}
+                handleModalClose={() => setShowVerificaProduto(false)}
+                valorProduto={valorProduto}
+                setValorProduto={setValorProduto}
+                inputModalRef={inputVerProdutoRef}
+                handleAddProduto={handleAddProdutoExtra} // Passa a função para o modal
+            />
+
         </div>
     );
 };
