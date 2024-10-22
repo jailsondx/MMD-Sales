@@ -111,7 +111,8 @@ const TelaVendas = () => {
 
             const produto = response.data[0];
             if (!produto) {
-                setShowAlertModal(true); // Exibe o modal se o produto não for encontrado
+                //setError('Produto não encontrado.');
+                setShowAlertModal(true);
                 setBarcode('');
                 return;
             }
@@ -184,8 +185,8 @@ const TelaVendas = () => {
         setTroco(trocoCalculado);
     };
 
-    // Função para fechar o modal de alerta
-    const handleAlertModalClose = () => {
+       // Função para fechar o modal de alerta
+       const handleAlertModalClose = () => {
         setShowAlertModal(false);
     };
 
@@ -228,41 +229,45 @@ const TelaVendas = () => {
                             <h5>Produtos Removidos:</h5>
                             <ul>
                                 {produtosRemovidos.map((produto, index) => (
-                                    <li className='li-produtos-removidos' key={index}>{produto.prod_nome} ({produto.quantidade}x)</li>
+                                    <li className='li-produtos-removidos' key={index}>{produto.quantidade}x {produto.prod_nome} R$ {produto.valor_total} </li>
                                 ))}
                             </ul>
                         </div>
                     </div>
                 </div>
+
                 <div className='Tela-Direita'>
-                    <ProdutoList produtos={produtos} onRemove={handleRemove} />
+                    <ProdutoList produtos={produtos} handleRemove={handleRemove} />
                 </div>
             </div>
 
             {/* Modais */}
             <ModalAdicionarProdutoSemCodigo
-                show={showModal}
-                onHide={handleModalClose}
-                onSave={handleModalSave}
+                showModal={showModal}
+                handleModalClose={handleModalClose}
+                handleModalSave={handleModalSave}
                 valorProduto={valorProduto}
                 setValorProduto={setValorProduto}
-                inputRef={inputModalRef}
+                inputModalRef={inputModalRef}
             />
 
             <ModalTroco
-                show={showTrocoModal}
-                onHide={handleTrocoModalClose}
-                onSave={handleTrocoCalculate}
+                showTrocoModal={showTrocoModal}
+                handleTrocoModalClose={handleTrocoModalClose}
+                handleTrocoCalculate={handleTrocoCalculate}
                 valorRecebido={valorRecebido}
                 setValorRecebido={setValorRecebido}
                 troco={troco}
-                inputRef={inputTrocoRef}
+                inputTrocoRef={inputTrocoRef}
             />
 
             <ModalVerificaProduto
-                show={showVerificaProdutoModal}
-                onHide={() => setShowVerificaProduto(false)}
-                inputRef={inputVerProdutoRef}
+                showModal={showVerificaProdutoModal}
+                handleModalClose={() => setShowVerificaProduto(false)}
+                valorProduto={valorProduto}
+                setValorProduto={setValorProduto}
+                inputModalRef={inputVerProdutoRef}
+                handleAddProduto={handleAddProdutoExtra} // Passa a função para o modal
             />
 
             <ModalAlert
@@ -270,6 +275,7 @@ const TelaVendas = () => {
                 onHide={handleAlertModalClose}
                 mensagem={'Produto Não Encontrado'}
             />
+
         </div>
     );
 };
