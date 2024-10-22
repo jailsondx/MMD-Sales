@@ -11,14 +11,25 @@ const ModalAdicionarProdutoSemCodigo = ({
     inputModalRef
 }) => {
     const handleSave = () => {
-        // Remove espaços em branco e verifica se o valor é vazio ou zero
+        // Remove espaços em branco
         const trimmedValue = valorProduto.trim();
+    
+        // Verifica se o valor é vazio, zero ou contém caracteres não numéricos
         if (trimmedValue === '' || trimmedValue === '0') {
-            alert('O valor do produto não pode estar vazio!');
+            alert('O valor do produto não pode estar vazio ou ser zero!');
             return;
         }
+    
+        // Verifica se o valor contém apenas números (usando expressão regular)
+        if (!/^\d+([.,]\d+)?$/.test(trimmedValue)) {
+            alert('O valor do produto deve conter apenas números!');
+            return;
+        }
+    
+        // Se passar por todas as validações, chama a função de salvar
         handleModalSave();
     };
+    
 
     return (
         <Modal show={showModal} onHide={handleModalClose} className="custom-modal">

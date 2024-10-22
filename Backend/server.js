@@ -188,8 +188,6 @@ app.get('/api/produtos/vendas', async (req, res) => {
   const produtoAdicionado = req.query;
   //const produtoAdicionado = {barcode};
 
-  console.log('Codigo de barras do Produto:', produtoAdicionado.barcode);
-
       // Verifica se o codBarras inicia com o número 2
       if (produtoAdicionado.barcode.startsWith(2)) {
         const produto_balanca = await PesquisaNaBalanca(DBconnection,produtoAdicionado);

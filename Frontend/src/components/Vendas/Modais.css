@@ -9,7 +9,22 @@
     color: #fff;
 }
 
+.custom-modal-header-alert {
+    background-color: #b3001bff;
+    color: #fff;
+}
+
 .custom-modal-body, .custom-modal-label {
+    color: #fff;
+}
+
+.custom-modal-body-alert, .custom-modal-label-alert {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 3vw;
+    font-weight: bolder;
     color: #fff;
 }
 
@@ -28,6 +43,13 @@
     width: 100%;
 }
 
+.custom-modal-button-alert {
+    background-color: #b3001bff;
+    color: #fff;
+    border: none;
+    width: 100%;
+}
+
 .custom-modal-button-secondary {
     background-color: #999;
     color: #fff;
@@ -35,7 +57,13 @@
 }
 
 .custom-modal-button-secondary:hover,
-.custom-modal-button-primary:hover {
+.custom-modal-button-primary:hover,
+.custom-modal-button-alert:hover{
+    opacity: 0.8;
+}
+
+.custom-modal-button-alert:hover{
+    background-color: rgb(132, 0, 20);
     opacity: 0.8;
 }
 
@@ -86,3 +114,4 @@
     align-items: center;
     width: 30%;
 }
+

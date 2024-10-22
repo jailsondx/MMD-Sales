@@ -8,6 +8,7 @@ import ProdutoList from './ProdutoList';
 import ModalAdicionarProdutoSemCodigo from './ModalAdicionarProdutoSemCodigo';
 import ModalTroco from './ModalTroco';
 import ModalVerificaProduto from './ModalVerificaProduto';
+import ModalAlert from './ModalAlert';
 import './Vendas.css';
 
 const TelaVendas = () => {
@@ -20,6 +21,7 @@ const TelaVendas = () => {
     const [valorProduto, setValorProduto] = useState('');
     const [valorRecebido, setValorRecebido] = useState('');
     const [troco, setTroco] = useState(null);
+    const [showAlertModal, setShowAlertModal] = useState(false);
 
     // Estados para avisos e erros
     const [error, setError] = useState('');
@@ -109,7 +111,7 @@ const TelaVendas = () => {
 
             const produto = response.data[0];
             if (!produto) {
-                setError('Produto não encontrado.');
+                setShowAlertModal(true); // Exibe o modal se o produto não for encontrado
                 setBarcode('');
                 return;
             }
@@ -182,6 +184,11 @@ const TelaVendas = () => {
         setTroco(trocoCalculado);
     };
 
+    // Função para fechar o modal de alerta
+    const handleAlertModalClose = () => {
+        setShowAlertModal(false);
+    };
+
     return (
         <div className='Tela-Vendas'>
             <Beforeunload onBeforeunload={(event) => {
@@ -221,47 +228,48 @@ const TelaVendas = () => {
                             <h5>Produtos Removidos:</h5>
                             <ul>
                                 {produtosRemovidos.map((produto, index) => (
-                                    <li className='li-produtos-removidos' key={index}>{produto.quantidade}x {produto.prod_nome} R$ {produto.valor_total} </li>
+                                    <li className='li-produtos-removidos' key={index}>{produto.prod_nome} ({produto.quantidade}x)</li>
                                 ))}
                             </ul>
                         </div>
                     </div>
                 </div>
-
                 <div className='Tela-Direita'>
-                    <ProdutoList produtos={produtos} handleRemove={handleRemove} />
+                    <ProdutoList produtos={produtos} onRemove={handleRemove} />
                 </div>
             </div>
 
             {/* Modais */}
             <ModalAdicionarProdutoSemCodigo
-                showModal={showModal}
-                handleModalClose={handleModalClose}
-                handleModalSave={handleModalSave}
+                show={showModal}
+                onHide={handleModalClose}
+                onSave={handleModalSave}
                 valorProduto={valorProduto}
                 setValorProduto={setValorProduto}
-                inputModalRef={inputModalRef}
+                inputRef={inputModalRef}
             />
 
             <ModalTroco
-                showTrocoModal={showTrocoModal}
-                handleTrocoModalClose={handleTrocoModalClose}
-                handleTrocoCalculate={handleTrocoCalculate}
+                show={showTrocoModal}
+                onHide={handleTrocoModalClose}
+                onSave={handleTrocoCalculate}
                 valorRecebido={valorRecebido}
                 setValorRecebido={setValorRecebido}
                 troco={troco}
-                inputTrocoRef={inputTrocoRef}
+                inputRef={inputTrocoRef}
             />
 
             <ModalVerificaProduto
-                showModal={showVerificaProdutoModal}
-                handleModalClose={() => setShowVerificaProduto(false)}
-                valorProduto={valorProduto}
-                setValorProduto={setValorProduto}
-                inputModalRef={inputVerProdutoRef}
-                handleAddProduto={handleAddProdutoExtra} // Passa a função para o modal
+                show={showVerificaProdutoModal}
+                onHide={() => setShowVerificaProduto(false)}
+                inputRef={inputVerProdutoRef}
             />
 
+            <ModalAlert
+                show={showAlertModal}
+                onHide={handleAlertModalClose}
+                mensagem={'Produto Não Encontrado'}
+            />
         </div>
     );
 };
