@@ -28,6 +28,7 @@ function Menu() {
               <NavDropdown.Item href="/Lista-Produto">Lista de Produtos</NavDropdown.Item>
               <NavDropdown.Item href="/Lista-Mercadoria">Lista de Mercadoria no Peso</NavDropdown.Item>
             </NavDropdown>
+            <Nav.Link href="/Consulta">Consultar Vendas</Nav.Link>
           </Nav>
           <Nav>
             <Nav.Link href="/Vendas">Vendas</Nav.Link>

@@ -1,0 +1,117 @@
+.custom-modal .modal-content {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+.custom-modal-header {
+    background-color: #4a90e2;
+    color: #fff;
+}
+
+.custom-modal-header-alert {
+    background-color: #b3001bff;
+    color: #fff;
+}
+
+.custom-modal-body, .custom-modal-label {
+    color: #fff;
+}
+
+.custom-modal-body-alert, .custom-modal-label-alert {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 3vw;
+    font-weight: bolder;
+    color: #fff;
+}
+
+.custom-modal-footer {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    background-color: rgba(0, 0, 0, 0.9);
+    border-top: 1px solid #ccc;
+}
+
+.custom-modal-button-primary {
+    background-color: #4a90e2;
+    color: #fff;
+    border: none;
+    width: 100%;
+}
+
+.custom-modal-button-alert {
+    background-color: #b3001bff;
+    color: #fff;
+    border: none;
+    width: 100%;
+}
+
+.custom-modal-button-secondary {
+    background-color: #999;
+    color: #fff;
+    border: none;
+}
+
+.custom-modal-button-secondary:hover,
+.custom-modal-button-primary:hover,
+.custom-modal-button-alert:hover{
+    opacity: 0.8;
+}
+
+.custom-modal-button-alert:hover{
+    background-color: rgb(132, 0, 20);
+    opacity: 0.8;
+}
+
+.troco-result {
+    display: flex;
+    flex-direction: column;
+}
+
+.text-Troco {
+    font-size: 1rem;
+}
+
+.text-Value-Troco {
+    display: flex;
+    justify-content: center;
+    font-size: 4rem;
+}
+
+.div-ProdutosExtra{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    border-bottom: #fff 2px solid;
+}
+
+.div-Icon-AddProdutoExtra{
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 10%;
+    min-width: 50px;
+}
+
+.div-ProdutoExtra-Add{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    text-align: left;
+    width: 60%;
+}
+
+.div-Button-Add{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+}
+

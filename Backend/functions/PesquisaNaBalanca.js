@@ -41,7 +41,7 @@ async function PesquisaNaBalanca(DBconnection, codBarras) {
             'Valor Pesado': updatedRows[0].prod_preco
         };
 
-        console.table([produto]);
+        //console.table([produto]);
         return updatedRows;
 
     } catch (error) {

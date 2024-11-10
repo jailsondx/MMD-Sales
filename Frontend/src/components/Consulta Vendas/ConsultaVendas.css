@@ -1,0 +1,127 @@
+/* Estilos específicos para o componente de Consulta de Vendas */
+.consulta-vendas-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
+    font-family: Arial, sans-serif;
+    width: 100vw;
+}
+
+.consulta-vendas-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.consulta-vendas-label {
+    font-size: 16px;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.consulta-vendas-input {
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px;
+    margin-right: 10px;
+}
+
+.consulta-vendas-button {
+    background-color: #00b894;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.consulta-vendas-button:disabled {
+    background-color: #d3d3d3;
+    cursor: not-allowed;
+}
+
+.consulta-vendas-button:hover:not(:disabled) {
+    background-color: #16a085;
+}
+
+.consulta-vendas-error {
+    color: red;
+    font-size: 14px;
+    margin-top: 15px;
+}
+
+/* Estilos para a tabela de vendas */
+.consulta-vendas-table {
+    justify-content: center;
+    align-items: center;
+    width: 70%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.consulta-vendas-table th,
+.consulta-vendas-table td {
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+.consulta-vendas-table th {
+    background-color: #00b894;
+    color: white;
+}
+
+.consulta-vendas-table td {
+    background-color: #fff;
+}
+
+
+.id-venda{
+    width: 2%;
+}
+
+.data-venda{
+    width: 10%;
+}
+
+.hora-venda{
+    width: 10%;
+}
+
+.valor-venda{
+    width: 10%;
+}
+
+.recebido-venda{
+    width: 10%;
+}
+
+.troco-venda{
+    width: 10%;
+}
+
+
+.produtos-venda{
+    width: 5%;
+}
+
+.produtos-venda-button{
+    width: 100%;
+}
+
+.td-ver-produtos-icon{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ver-produtos-icon{
+cursor: pointer;
+width: 30px;
+height: 30px;
+}
+

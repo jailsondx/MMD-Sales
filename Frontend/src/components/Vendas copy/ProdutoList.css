@@ -1,0 +1,61 @@
+.table-Lista-Produtos-Venda {
+    width: 95%;
+    margin: 20px 0;
+    border-collapse: collapse;
+    table-layout: fixed;
+    max-height: 60vh; /* Define uma altura máxima */
+    overflow-y: auto; /* Habilita a rolagem vertical */
+}
+
+.table-Lista-Produtos-Venda table {
+    width: 100%;
+}
+
+.table-Lista-Produtos-Venda th,
+.table-Lista-Produtos-Venda td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #dddddd;
+    word-wrap: break-word; /* Para evitar o estouro do conteúdo */
+}
+
+.table-Lista-Produtos-Venda th {
+    background-color: #b3001bff;
+    color: whitesmoke;
+}
+
+.table-Lista-Produtos-Venda td {
+    background-color: #f9f9f9;
+}
+
+.Lista-Venda-ID {
+    width: 5%; /* Ajustado para manter espaço para outras colunas */
+}
+
+.Lista-Venda-Nome-Prod {
+    width: 40%; /* Ajustado para manter espaço para outras colunas */
+}
+
+.Lista-Venda-Quantidade {
+    width: 5%;
+}
+
+.Lista-Venda-Preco {
+    width: 15%;
+}
+
+.Lista-Venda-Acao {
+    width: 10%;
+    min-width: 100px;
+}
+
+.text-Venda-AddInfor {
+    font-size: 0.8em;
+    color: #666;
+}
+
+.table-Lista-Produtos-Venda tr:nth-child(even) {
+    background-color: #dddddd;
+}
+
+

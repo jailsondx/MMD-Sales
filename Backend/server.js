@@ -20,6 +20,8 @@ const ApagaMercadoria = require('./functions/ApagaMercadoria');
 const AdicionaProduto = require('./functions/AdicionaProdutoVenda');
 const PesquisaNaBalanca = require('./functions/PesquisaNaBalanca');
 const VerificaProduto = require('./functions/VerificaProduto');
+const RegistrarVenda = require('./functions/RegistrarVenda');
+const ConsultarVendas = require('./functions/ConsultarVendas');
 
 
 const PORT = 3001;
@@ -191,14 +193,15 @@ app.get('/api/produtos/vendas', async (req, res) => {
       // Verifica se o codBarras inicia com o número 2
       if (produtoAdicionado.barcode.startsWith(2)) {
         const produto_balanca = await PesquisaNaBalanca(DBconnection,produtoAdicionado);
-        console.log('BALANCA', produto_balanca);
+        //console.log('BALANCA', produto_balanca);
         res.json(produto_balanca);
     } else {
         const produto = await AdicionaProduto(DBconnection, produtoAdicionado);
-        console.log('PRODUTO', produto);
+        //console.log('PRODUTO', produto);
         res.json(produto);
     }
 });
+
 
 // Rota para pesquisar produtos por código de barras ou nome
 app.get('/api/produtos/verifica', async (req, res) => {
@@ -219,6 +222,77 @@ app.get('/api/produtos/verifica', async (req, res) => {
       res.status(500).json({ success: false, message: 'Erro ao buscar o produto.' });
   }
 });
+
+
+
+
+app.post('/api/vendas/fechar', async (req, res) => {
+  const { produtos, total, troco, valorRecebido } = req.body;
+
+  // Verifica se os dados necessários foram passados
+  if (!produtos || !Array.isArray(produtos) || produtos.length === 0) {
+      return res.status(400).json({ error: 'Nenhum produto foi adicionado à venda.' });
+  }
+
+  if (total === undefined || troco === undefined || valorRecebido === undefined) {
+      return res.status(400).json({ error: 'Informações incompletas da venda.' });
+  }
+
+  // Prepara os itens da venda para enviar à função RegistrarVenda
+  const itensVenda = produtos.map(produto => ({
+      nome: produto.prod_nome,
+      quantidade: produto.quantidade,
+      preco_unitario: parseFloat(produto.prod_preco.replace(',', '.'))
+  }));
+
+  try {
+      // Chama a função RegistrarVenda para salvar os dados no banco
+      const resultadoVenda = await RegistrarVenda(DBconnection, itensVenda, total, valorRecebido);
+
+      // Verifica se houve erro durante o registro da venda
+      if (resultadoVenda.erro) {
+          return res.status(500).json({ error: resultadoVenda.erro });
+      }
+
+      // Retorna o resultado da venda registrada com sucesso
+      res.json({
+          message: resultadoVenda.mensagem,
+          idVenda: resultadoVenda.idVenda,
+          troco: troco
+      });
+  } catch (error) {
+      console.error('Erro ao finalizar venda:', error);
+      res.status(500).json({ error: 'Erro ao finalizar a venda.' });
+  }
+});
+
+
+// Rota para consultar vendas por data
+app.post('/api/vendas/consultar', async (req, res) => {
+  const { data } = req.body;
+
+  // Verifica se a data foi fornecida
+  if (!data) {
+      return res.status(400).json({ error: 'Data não fornecida.' });
+  }
+
+  try {
+      // Chama a função para consultar as vendas
+      const resultado = await ConsultarVendas(DBconnection, data);
+
+      if (resultado.erro) {
+          return res.status(500).json({ erro: resultado.erro });
+      }
+
+      res.json(resultado);
+  } catch (error) {
+      console.error('Erro ao consultar vendas:', error);
+      res.status(500).json({ erro: 'Erro ao consultar vendas.' });
+  }
+});
+
+
+
 
 
 

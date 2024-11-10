@@ -1,0 +1,80 @@
+.Tela-Vendas {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100vw;
+    margin-top: 2vh;
+}
+
+.text-Venda-AddInfor {
+    color: gray;
+    font-size: 0.7rem;
+    font-style: italic;
+}
+
+.form-Adicao-Produto {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 40vw;
+}
+
+.input-Adicao-Produto {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-size: 2rem;
+    width: 40vw;
+    height: 8vh;
+    border: 0;
+    border-bottom: 2px solid;
+    background-color: whitesmoke;
+}
+
+.input-Adicao-Produto:focus {
+    background-color: whitesmoke;
+}
+
+.text-Total {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    font-size: 5vw;
+    margin: 3vh;
+}
+
+.text-Total b {
+    color: #b3001bff;
+}
+
+.text-Total b:hover {
+    text-decoration-line: underline;
+    text-underline-offset: 2vh;
+}
+
+.li-produtos-removidos{
+    display: flex;
+    font-size: 12px;
+}
+
+.Divisao-Telas {
+    display: flex;
+    flex-direction: row;
+}
+
+.Tela-Esquerda {
+    min-width: 10vw;
+    max-width: 30vw;
+}
+
+.Tela-Direita {
+    width: 70vw;
+    height: 60vh; /* Define altura fixa da tabela */
+}

@@ -21,11 +21,41 @@ CREATE TABLE IF NOT EXISTS balanca (
     prod_preco FLOAT(20)                         -- Preço do produto
 );
 
+-- Criação da tabela 'vendas' para armazenar cada venda com informações gerais
+CREATE TABLE IF NOT EXISTS vendas (
+    id_venda INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,  -- Identificador único para cada venda
+    data DATE NOT NULL,           -- Data da venda
+    time TIME NOT NULL,           -- Hora da venda
+    valor_total FLOAT(20) NOT NULL,                    -- Valor total da venda
+    valor_recebido FLOAT(20) NOT NULL                  -- Valor recebido pelo cliente
+);
+
+
+-- Criação da tabela 'itens_venda' para armazenar os itens de cada venda,
+-- incluindo o nome e preço do produto no momento da venda
+CREATE TABLE IF NOT EXISTS itens_venda (
+    id_item INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,     -- Identificador único para cada item da venda
+    id_venda INT UNSIGNED NOT NULL,                      -- Referência à venda na tabela 'vendas'
+    nome_produto VARCHAR(50) NOT NULL,                   -- Nome do produto no momento da venda
+    quantidade INT UNSIGNED NOT NULL,                    -- Quantidade do produto vendido
+    preco_unitario FLOAT(20) NOT NULL,                   -- Preço unitário do produto no momento da venda
+
+    -- Chave estrangeira para garantir a integridade referencial com a tabela `vendas`
+    FOREIGN KEY (id_venda) REFERENCES vendas(id_venda) ON DELETE CASCADE
+);
+
+
 -- Apagar a tabela 'balanca'
 DROP TABLE IF EXISTS balanca;
 
 -- Apagar a tabela 'produtos'
 DROP TABLE IF EXISTS produtos;
+
+-- Apagar a tabela 'vendas'
+DROP TABLE IF EXISTS vendas;
+
+-- Apagar a tabela 'itens_venda'
+DROP TABLE IF EXISTS itens_venda;
 
 -- Limpar (truncar) as tabelas sem remover a estrutura
 TRUNCATE TABLE balanca;
@@ -48,6 +78,12 @@ SELECT * FROM produtos;
 
 -- Consultar todos os dados da tabela 'balanca'
 SELECT * FROM balanca;
+
+-- Consultar todos os dados da tabela 'vendas'
+SELECT * FROM vendas;
+
+-- Consultar todos os dados da tabela 'itens_venda'
+SELECT * FROM itens_venda;
 
 -- Inserir dados na tabela 'balanca'
 INSERT INTO balanca (prod_nome, prod_cod)
