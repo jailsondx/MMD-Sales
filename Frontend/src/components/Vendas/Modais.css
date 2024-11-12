@@ -112,6 +112,21 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 30%;
+    width: 40%;
 }
 
+.contador-quantidade{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.button-quantidade{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin: 10px;
+    width: 15px;
+}
