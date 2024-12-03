@@ -1,0 +1,57 @@
+/* Estilos gerais */
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+h7 {
+    color: gray;
+    font-style: italic;
+}
+
+/* Estilos da tabela */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #00b894;
+    color: white;
+}
+
+/* Estilos do container de informações da venda */
+.consulta-vendas {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border: 5px solid #00b894;
+    box-shadow: 2px 2px 5px gray;
+}
+
+.consulta-vendas-icon {
+    width: 10%;
+    height: 10%;
+}
+
+.consulta-vendas-informacoes {
+    display: flex;
+    flex-direction: column;
+}
+
+.consulta-vendas-box {
+    display: flex;
+    padding-right: 100px;
+}
+
+.consulta-vendas-minibox {
+    padding-right: 100px;
+}

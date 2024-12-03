@@ -5,18 +5,12 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-
-    font-family: Arial, sans-serif;
     width: 100vw;
 }
 
-.consulta-vendas-title {
-    font-size: 24px;
-    margin-bottom: 20px;
-    text-align: center;
-}
 
 .consulta-vendas-label {
+    padding-top: 30px;
     font-size: 16px;
     margin-right: 10px;
     font-weight: bold;
@@ -47,6 +41,10 @@
 
 .consulta-vendas-button:hover:not(:disabled) {
     background-color: #16a085;
+}
+
+.consulta-vendas-mensagem{
+    padding: 20px;
 }
 
 .consulta-vendas-error {
@@ -125,3 +123,12 @@ width: 30px;
 height: 30px;
 }
 
+input[type="date"] {
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 8px;
+    font-size: 16px;
+    color: #333;
+    border-radius: 4px;
+    outline: none;
+}

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from 'react-bootstrap';
 import axios from 'axios';
 import formatarValor from '../Vendas/FormatarValor';
 
@@ -44,24 +43,15 @@ function ConsultaVendas() {
         const produtosHTML = `
             <html>
                 <head>
-                    <title>Produtos da Venda ${venda.id_venda}</title>
-                    <style>
-                        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f9f9f9; }
-                        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-                        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
-                        th { background-color: #00b894; color: white; }
-                        .consulta-vendas {display: flex; background-color: white; align-items: center;}
-                        .consulta-vendas-informacoes {display: flex; flex-direction: column;}
-                        .consulta-vendas-box {display: flex; padding-right: 100px}
-                        .consulta-vendas-minibox {padding-right: 100px}
-                        .consulta-vendas-icon {width: 10%; height: 10%;}
-                    </style>
+                    <title>Relatório da Venda ${venda.id_venda}</title>
+                    <link rel="stylesheet" href="/RelatorioVendas.css" />
                 </head>
                 <body>
+                    <h7>Esse cupom não tem valor fiscal</h7>
                     <div class="consulta-vendas">
                         <img src="budgeting.gif" class="consulta-vendas-icon">
                         <div class="consulta-vendas-informacoes">
-                            <h2>Produtos da Venda ${venda.id_venda}</h2>
+                            <h2>Relatório da Venda #${venda.id_venda}</h2>
                             <div class="consulta-vendas-box">
                                 <div class="consulta-vendas-minibox">
                                     <p>Data: ${venda.data}</p>
@@ -108,16 +98,17 @@ function ConsultaVendas() {
 
     return (
         <div className="consulta-vendas-container">
-            <h2 className="consulta-vendas-title">Verificar Vendas</h2>
+            <h1>Consultar Vendas</h1>
 
             <div className="consulta-vendas-input-container">
                 <label htmlFor="dataVenda" className="consulta-vendas-label">Selecione a data:</label>
                 <input
                     type="date"
                     id="dataVenda"
+                    min="2024-11-10"
                     className="consulta-vendas-input"
                     value={dataVenda}
-                    onChange={(e) => setDataVenda(e.target.value)}
+                    onChange={(data_venda) => setDataVenda(data_venda.target.value)}
                 />
                 <br/>
                     <button onClick={buscarVendas} className="consulta-vendas-button" disabled={loading}>

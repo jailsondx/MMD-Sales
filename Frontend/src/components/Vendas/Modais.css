@@ -36,18 +36,20 @@
     border-top: 1px solid #ccc;
 }
 
+[class^="custom-modal-button-"] {
+    width: 100%;
+}
+
 .custom-modal-button-primary {
     background-color: #4a90e2;
     color: #fff;
     border: none;
-    width: 100%;
 }
 
 .custom-modal-button-alert {
     background-color: #b3001bff;
     color: #fff;
     border: none;
-    width: 100%;
 }
 
 .custom-modal-button-secondary {
@@ -129,4 +131,8 @@
     text-align: center;
     margin: 10px;
     width: 15px;
+}
+
+.button-quantidade:active{
+    transform: scale(0.8);
 }
