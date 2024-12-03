@@ -9,16 +9,15 @@ function ConsultaVendas() {
     const [vendas, setVendas] = useState([]); // Inicializa como array vazio
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const [pesquisaProduto, setPesquisaProduto] = useState(''); // Estado para pesquisa de produto
 
-    // Define a data atual como valor padrão ao carregar o componente
-    useEffect(() => {
-        const dataAtual = new Date();
-        const dia = String(dataAtual.getDate()).padStart(2, '0');
-        const mes = String(dataAtual.getMonth() + 1).padStart(2, '0');
-        const ano = dataAtual.getFullYear();
-        setDataVenda(`${ano}-${mes}-${dia}`);
-    }, []);
+        // Define a data atual como valor padrão ao carregar o componente
+        useEffect(() => {
+            const dataAtual = new Date();
+            const dia = String(dataAtual.getDate()).padStart(2, '0');
+            const mes = String(dataAtual.getMonth() + 1).padStart(2, '0');
+            const ano = dataAtual.getFullYear();
+            setDataVenda(`${ano}-${mes}-${dia}`);
+        }, []);
 
     const buscarVendas = async () => {
         if (!dataVenda) {
@@ -38,16 +37,6 @@ function ConsultaVendas() {
         } finally {
             setLoading(false);
         }
-    };
-
-    const filtrarVendasPorProduto = () => {
-        if (pesquisaProduto.trim() === '') return vendas;
-
-        return vendas.filter(venda =>
-            venda.itens.some(item =>
-                item.nome_produto.toLowerCase().includes(pesquisaProduto.toLowerCase())
-            )
-        );
     };
 
     const abrirProdutosEmNovaAba = (venda) => {
@@ -87,16 +76,16 @@ function ConsultaVendas() {
                         </thead>
                         <tbody>
                             ${venda.itens
-                .map(
-                    (item) => `
+                                .map(
+                                    (item) => `
                                     <tr>
                                         <td>${item.nome_produto}</td>
                                         <td>${item.quantidade}x</td>
                                         <td>${formatarValor(item.preco_unitario)}</td>
                                         <td>${formatarValor(item.preco_unitario * item.quantidade)}</td>
                                     </tr>`
-                )
-                .join('')}
+                                )
+                                .join('')}
                         </tbody>
                     </table>
                 </body>
@@ -111,7 +100,6 @@ function ConsultaVendas() {
         <div className="consulta-vendas-container">
             <h1>Consultar Vendas</h1>
 
-            <div className="consulta-vendas-inputs-container">
             <div className="consulta-vendas-input-container">
                 <label htmlFor="dataVenda" className="consulta-vendas-label">Selecione a data:</label>
                 <input
@@ -122,28 +110,15 @@ function ConsultaVendas() {
                     value={dataVenda}
                     onChange={(data_venda) => setDataVenda(data_venda.target.value)}
                 />
-                </div>
-                <div className="consulta-vendas-input-container">
-                    <label htmlFor="pesquisaProduto" className="consulta-vendas-label">Pesquisar Produto:</label>
-                    <input
-                        type="text"
-                        id="pesquisaProduto"
-                        className="consulta-vendas-input-txt"
-                        value={pesquisaProduto}
-                        onChange={(e) => setPesquisaProduto(e.target.value)}
-                        placeholder="Nome do produto"
-                    />
-                </div>
-                <button onClick={buscarVendas} className="consulta-vendas-button" disabled={loading}>
-                    {loading ? 'Carregando...' : 'Buscar Vendas'}
-                </button>
+                <br/>
+                    <button onClick={buscarVendas} className="consulta-vendas-button" disabled={loading}>
+                        {loading ? 'Carregando...' : 'Buscar Vendas'}
+                    </button>
             </div>
-
-
 
             {error && <p className="consulta-vendas-error">{error}</p>}
 
-            {filtrarVendasPorProduto().length > 0 ? (
+            {vendas.length > 0 ? (
                 <table className="consulta-vendas-table">
                     <thead>
                         <tr>
@@ -157,7 +132,7 @@ function ConsultaVendas() {
                         </tr>
                     </thead>
                     <tbody>
-                        {filtrarVendasPorProduto().map((venda) => (
+                        {vendas.map((venda) => (
                             <tr key={venda.id_venda}>
                                 <td>{venda.id_venda}</td>
                                 <td>{venda.data}</td>
@@ -166,11 +141,11 @@ function ConsultaVendas() {
                                 <td>{formatarValor(venda.valor_recebido)}</td>
                                 <td>{formatarValor(venda.valor_recebido - venda.valor_total)}</td>
                                 <td className='td-ver-produtos-icon'>
-                                    <img
+                                    <img 
                                         src="caixa-selecao-static.jpg" // imagem estática do GIF
-                                        alt="Ver Produtos"
-                                        className="ver-produtos-icon"
-                                        onClick={() => abrirProdutosEmNovaAba(venda)}
+                                        alt="Ver Produtos" 
+                                        className="ver-produtos-icon" 
+                                        onClick={() => abrirProdutosEmNovaAba(venda)} 
                                         onMouseOver={(e) => e.currentTarget.src = 'caixa-selecao.gif'} // muda para GIF animado
                                         onMouseOut={(e) => e.currentTarget.src = 'caixa-selecao-static.jpg'} // volta para imagem estática
                                     />

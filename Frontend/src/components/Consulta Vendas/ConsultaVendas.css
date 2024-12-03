@@ -8,20 +8,42 @@
     width: 100vw;
 }
 
+.consulta-vendas-inputs-container{
+    display: flex;
+    flex-direction: column;
+}
+
+.consulta-vendas-input-container{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    height: 8dvh;
+    width: 25dvw;
+}
 
 .consulta-vendas-label {
-    padding-top: 30px;
     font-size: 16px;
-    margin-right: 10px;
     font-weight: bold;
 }
 
-.consulta-vendas-input {
+.consulta-vendas-input, .consulta-vendas-input-txt {
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
     width: 200px;
     margin-right: 10px;
+}
+
+.consulta-vendas-input-txt{
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    padding: 8px;
+    font-size: 16px;
+    color: #333;
+    border-radius: 4px;
+    outline: none;
 }
 
 .consulta-vendas-button {
