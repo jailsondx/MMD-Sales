@@ -13,7 +13,7 @@ function Menu() {
       <Container>
         <Navbar.Brand href="/">
         <div className='Logo-Menu'>
-          <img src='/MMD-LOGO.png' className='LogoMMD' alt='Logo do MMD'></img>
+          <img src='/LOGO.png' className='LogoMMD' alt='Logo do MMD'></img>
         </div>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />

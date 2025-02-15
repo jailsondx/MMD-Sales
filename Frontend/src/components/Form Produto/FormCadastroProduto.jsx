@@ -6,7 +6,6 @@ import { Alert, Snackbar } from '@mui/material';
 import './FormCadastroProduto.css';
 
 function FormCadastroProduto() {
-
     const [produto, setProduto] = useState({
         nome: '',
         codigoBarras: '',
@@ -24,10 +23,20 @@ function FormCadastroProduto() {
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        setProduto(prevProduto => ({
-            ...prevProduto,
-            [name]: value
-        }));
+
+        if (name === 'preco') {
+            // Substituir vírgulas por pontos, e limitar o valor ao formato de número
+            const formattedValue = value.replace(',', '.');
+            setProduto(prevProduto => ({
+                ...prevProduto,
+                [name]: formattedValue
+            }));
+        } else {
+            setProduto(prevProduto => ({
+                ...prevProduto,
+                [name]: value
+            }));
+        }
     };
 
     const [showTemporaryModal, setShowTemporaryModal] = useState(false);
@@ -49,7 +58,7 @@ function FormCadastroProduto() {
         try {
             const response = await axios.post(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/CadastroProduto`, { produto });
             console.log('Resposta do Servidor:', response.data);
-            
+
             if(response.data.mensagem === 'Produto já Cadastrado'){
                 setSnackbarMessage(response.data.mensagem);
                 setSnackbarSeverity('error');
@@ -60,7 +69,7 @@ function FormCadastroProduto() {
 
         } catch (error) {
             console.error('Houve um erro ao enviar as informacoes!', error);
-            
+
             setSnackbarMessage(error.response?.data?.erro || 'Erro ao cadastrar produto');
             setSnackbarSeverity('error');
         } finally {
@@ -122,7 +131,7 @@ function FormCadastroProduto() {
                                     <InputGroup.Text>R$</InputGroup.Text>
                                     <Form.Control
                                         className='input-Cadastro'
-                                        type="number"
+                                        type="text"  // Alterado para text
                                         name="preco"
                                         value={produto.preco}
                                         autoComplete='no'

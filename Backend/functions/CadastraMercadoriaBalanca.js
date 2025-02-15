@@ -3,13 +3,13 @@ const FormataValor = require('./FormataValor');
 
 async function CadastraMercadoriaBalanca(DBconnection, mercadoria) {
 
-    mercadoria.codigoBarras = CompletaCodBarras(mercadoria.codigoBarras);
+    mercadoria.codigoBalanca = CompletaCodBarras(mercadoria.codigoBalanca);
     mercadoria.nome = mercadoria.nome.toUpperCase();
 
     try {
         // Verificar se o código de barras já está cadastrado
         const sqlConsulta = 'SELECT prod_cod FROM balanca WHERE prod_cod = ?';
-        const valuesConsulta = [mercadoria.codigoBarras];
+        const valuesConsulta = [mercadoria.codigoBalanca];
     
         // Executando a consulta
         const [rows] = await DBconnection.query(sqlConsulta, valuesConsulta);
@@ -28,7 +28,7 @@ async function CadastraMercadoriaBalanca(DBconnection, mercadoria) {
         const sqlInsert = 'INSERT INTO balanca (prod_nome, prod_cod) VALUES (?, ?)';
   
         // Valores para a consulta
-        const valuesInsert = [mercadoria.nome, mercadoria.codigoBarras];
+        const valuesInsert = [mercadoria.nome, mercadoria.codigoBalanca];
   
         // Executando a consulta
         await DBconnection.query(sqlInsert, valuesInsert);

@@ -5,7 +5,7 @@ function Central() {
     return (
       <div className="central">
         <div className='Logo-Principal'>
-          <img src='/MMD-LOGO.png' className='LogoMMD'></img>
+          <img src='/LOGO.png' className='LogoMMD'></img>
         </div>
 
       </div>

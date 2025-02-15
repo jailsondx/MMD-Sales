@@ -13,20 +13,23 @@ const ListaMercadorias = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(10); // Número de itens por página
 
-    useEffect(() => {
-        const fetchProdutos = async () => {
-            try {
-                const response = await axios.get(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/mercadoriaBalanca`);
-                console.log('Resposta do Servidor:', response.data);
-                setProdutos(response.data);
-                setProdutosFiltrados(response.data); // Inicialmente, mostrar todos os mercadorias
-            } catch (error) {
-                console.error('Erro ao buscar mercadorias:', error);
-                setError('Erro ao buscar mercadorias');
-            }
-        };
 
-        fetchProdutos();
+    // Função separada para buscar mercadorias
+    const fetchMercadorias = async () => {
+        try {
+            const response = await axios.get(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/mercadoriaBalanca`);
+            console.log('Resposta do Servidor:', response.data);
+            setProdutos(response.data);
+            setProdutosFiltrados(response.data); // Inicialmente, mostrar todos os mercadorias
+        } catch (error) {
+            console.error('Erro ao buscar mercadorias:', error);
+            setError('Erro ao buscar mercadorias');
+        }
+    };
+
+    // Chama fetchMercadorias uma vez quando o componente é montado
+    useEffect(() => {
+        fetchMercadorias();
     }, []);
 
     const handleSearch = (query) => {
@@ -56,23 +59,48 @@ const ListaMercadorias = () => {
     const handleNextPage = () => {
         setCurrentPage(prevPage => (prevPage < totalPages ? prevPage + 1 : prevPage));
     };
-    
+
     const handleLastPage = () => {
         setCurrentPage(totalPages);
+    };
+
+    const handlePageInputChange = (event) => {
+        const value = event.target.value;
+        if (value === '' || /^[0-9\b]+$/.test(value)) {
+            setCurrentPage(value ? parseInt(value, 10) : '');
+        }
+    };
+
+    const handlePageInputBlur = () => {
+        // Garantir que o valor da página não saia do intervalo válido
+        if (currentPage < 1) {
+            setCurrentPage(1);
+        } else if (currentPage > totalPages) {
+            setCurrentPage(totalPages);
+        }
+    };
+
+    const handlePageInputEnter = () => {
+        if (currentPage > 0 && currentPage <= totalPages) {
+            return;
+        } else {
+            setCurrentPage(1); // Resetar para a primeira página, se o número for inválido
+        }
     };
 
     if (error) {
         return <div>{error}</div>;
     }
 
-    const handleEdit = (editedProduct) => {
+    const handleEdit = async (editedProduct) => {
         setProdutos(mercadorias.map(mercadoria => (mercadoria.id === editedProduct.id ? editedProduct : mercadoria)));
         setProdutosFiltrados(mercadoriasFiltrados.map(mercadoria => (mercadoria.id === editedProduct.id ? editedProduct : mercadoria)));
-        window.location.reload();
+        await fetchMercadorias();  // Recarrega a lista após editar
     };
 
-    const handleDelete = (productId) => {
+    const handleDelete = async (productId) => {
         setProdutos(mercadorias.filter(p => p.id !== productId));
+        await fetchMercadorias();  // Recarrega a lista após deletar
     };
 
     return (
@@ -105,20 +133,34 @@ const ListaMercadorias = () => {
                 </tbody>
             </table>
             <div className="pagination">
-                <button className="button-Pagination" onClick={handlePrevPage} disabled={currentPage === 1}>
-                    Anterior
-                </button>
-                <span>{currentPage} de {totalPages}</span>
-                <button className="button-Pagination" onClick={handleNextPage} disabled={currentPage === totalPages}>
-                    Próxima
-                </button>
+                <div className='pagination-Order'>
+                    <button className="button-Pagination" onClick={handlePrevPage} disabled={currentPage === 1}>
+                        Anterior
+                    </button>
+                    <span>
+                        <input 
+                            type="number" 
+                            value={currentPage || ''} 
+                            onChange={handlePageInputChange} 
+                            onBlur={handlePageInputBlur}
+                            onKeyPress={(e) => e.key === 'Enter' && handlePageInputEnter()} 
+                            min="1" 
+                            max={totalPages} 
+                            style={{ width: '50px', textAlign: 'center' }}
+                        />
+                        de {totalPages}
+                    </span>
+                    <button className="button-Pagination" onClick={handleNextPage} disabled={currentPage === totalPages}>
+                        Próxima
+                    </button>
+                </div>
+
+                <div className='pagination-Last'>
+                    <button className="button-Pagination"  onClick={handleLastPage} disabled={currentPage === totalPages}>
+                        Última Página
+                    </button>
+                </div>
             </div>
-            <div className='pagination-Last'>
-                <button onClick={handleLastPage} disabled={currentPage === totalPages}>
-                    Última Página
-                </button>
-            </div>
-            
         </div>
     );
 };

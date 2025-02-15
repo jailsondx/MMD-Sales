@@ -8,7 +8,7 @@ USE mmd_store;
 CREATE TABLE IF NOT EXISTS produtos (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,  -- Chave primária com auto incremento
     prod_nome VARCHAR(50) NOT NULL,              -- Nome do produto
-    prod_cod INT(20) NOT NULL,                   -- Código do produto
+    prod_cod VARCHAR(30) NOT NULL,               -- Código do produto
     prod_preco FLOAT(20) NOT NULL,               -- Preço do produto
     prod_add_infor VARCHAR(255)                  -- Informação adicional do produto
 );
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS produtos (
 CREATE TABLE IF NOT EXISTS balanca (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,  -- Chave primária com auto incremento
     prod_nome VARCHAR(50) NOT NULL,              -- Nome do produto
-    prod_cod INT(20) NOT NULL,                   -- Código do produto
+    prod_cod VARCHAR(30) NOT NULL,                   -- Código do produto
     prod_preco FLOAT(20)                         -- Preço do produto
 );
 

@@ -2,33 +2,28 @@ import { useState } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form } from 'react-bootstrap';
-
 import { Alert, Snackbar } from '@mui/material';
-
 import './FormCadastroMercadoria.css';
 
-
-
 function FormCadastroMercadoria() {
-
-    const [mercadoria, setmercadoria] = useState({
+    // Alterando o nome para setMercadoria
+    const [mercadoria, setMercadoria] = useState({
         nome: '',
-        codigoBarras: '',
+        codigoBalanca: '',
     });
 
     const handleChange = (event) => {
         const { name, value } = event.target;
-        setmercadoria(prevmercadoria => ({
-            ...prevmercadoria,
+        // Corrigindo para setMercadoria
+        setMercadoria(prevMercadoria => ({
+            ...prevMercadoria,
             [name]: value
         }));
     };
 
-  
     const [showTemporaryModal, setShowTemporaryModal] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [snackbarSeverity, setSnackbarSeverity] = useState('success');
-
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -39,7 +34,7 @@ function FormCadastroMercadoria() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        //Limpa o Console
+        // Limpa o Console
         console.clear();
         console.table([mercadoria]);
 
@@ -51,27 +46,22 @@ function FormCadastroMercadoria() {
                 setSnackbarMessage(response.data.mensagem);
                 setSnackbarSeverity('error');
             } else {
-                // Define a mensagem de sucesso
                 setSnackbarMessage(response.data.mensagem || 'Mercadoria Cadastrado com Sucesso');
                 setSnackbarSeverity('success');
             }
 
         } catch (error) {
-            console.error('Houve um erro ao enviar as informacoes!', error);
+            console.error('Houve um erro ao enviar as informações!', error);
             
-            // Define a mensagem de erro
             setSnackbarMessage(error.response?.data?.erro || 'Erro ao cadastrar produto');
             setSnackbarSeverity('error');
         } finally {
-            // Exibe a mensagem no Snackbar
             setShowTemporaryModal(true);
 
-            // Resetar os valores dos campos
+            // Resetando os valores dos campos
             setMercadoria({
                 nome: '',
-                codigoBarras: '',
-                preco: '',
-                informacoesAdicionais: ''
+                codigoBalanca: '',
             });
         }
     };
@@ -92,7 +82,7 @@ function FormCadastroMercadoria() {
                                     type="text"
                                     name="nome"
                                     autoComplete='no'
-                                    oninput="this.value = this.value.toUpperCase()"
+                                    onInput={(e) => e.target.value = e.target.value.toUpperCase()}
                                     value={mercadoria.nome}
                                     onChange={handleChange}
                                     placeholder="Digite a Descrição/Nome do Mercadoria"
@@ -107,9 +97,9 @@ function FormCadastroMercadoria() {
                                 <Form.Control
                                     className='input-Cadastro'
                                     type="number"
-                                    name="codigoBarras"
+                                    name="codigoBalanca"
                                     autoComplete='no'
-                                    value={mercadoria.codigoBarras}
+                                    value={mercadoria.codigoBalanca}
                                     onChange={handleChange}
                                     placeholder="Digite o código da balança"
                                     required
@@ -131,7 +121,6 @@ function FormCadastroMercadoria() {
                 </Alert>
             </Snackbar>
         </div>
-        
     );
 }
 

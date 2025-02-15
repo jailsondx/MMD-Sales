@@ -42,18 +42,25 @@ table {
 
   .pagination {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-top: 5vh;
-    margin-bottom: 5vh;
+    width: 70%;
+    height: 100%;
 }
 
 .button-Pagination{
-    margin-top: 0;
-    padding: 5px 10px;
+    width: 20%;
     cursor: pointer;
 }
 
-.pagination span {
-    margin: 0 10px;
+.pagination-Order, .pagination-Last{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  width: 100%;
+
+  margin-top: 10px;
+  margin-bottom: 10px;
 }

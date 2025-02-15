@@ -11,7 +11,8 @@ const ButtonEditar = ({ produto, onEdit }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [editedProduct, setEditedProduct] = useState({
         ...produto,
-        prod_preco: limparPreco(produto.prod_preco) // Limpar o valor do preço
+        // Converte o valor de 'prod_preco' para string com vírgula quando o modal é aberto
+        prod_preco: produto.prod_preco.toString().replace('.', ',')
     });
 
     const [error, setError] = useState('');
@@ -114,10 +115,6 @@ const ButtonEditar = ({ produto, onEdit }) => {
             </Snackbar>
         </>
     );
-};
-
-const limparPreco = (preco) => {
-    return preco.replace(',', '.').trim();
 };
 
 export default ButtonEditar;

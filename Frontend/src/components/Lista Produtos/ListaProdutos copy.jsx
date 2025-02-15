@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import PesquisaProduto from '../Pesquisa Produto/PesquisaProduto';
 
-import formatarPreco from '../../functions/FormataPreco'
-
 import './ListaProdutos.css';
 import ButtonEditar from '../Button Editar/ButtonEditar';
 import ButtonApagar from '../Button Apagar/ButtonApagar';
@@ -15,26 +13,21 @@ const ListaProdutos = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(10); // Número de itens por página
 
-
-
-    // Função separada para buscar produtos
-    const fetchProdutos = async () => {
-        try {
-            const response = await axios.get(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/produtos`);
-            console.log('Resposta do Servidor:', response.data);
-            setProdutos(response.data);
-            setProdutosFiltrados(response.data); // Inicialmente, mostrar todos os produtos
-        } catch (error) {
-            console.error('Erro ao buscar produtos:', error);
-            setError('Erro ao buscar produtos');
-        }
-    };
-
-    // Chama fetchProdutos uma vez quando o componente é montado
     useEffect(() => {
+        const fetchProdutos = async () => {
+            try {
+                const response = await axios.get(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/produtos`);
+                console.log('Resposta do Servidor:', response.data);
+                setProdutos(response.data);
+                setProdutosFiltrados(response.data); // Inicialmente, mostrar todos os produtos
+            } catch (error) {
+                console.error('Erro ao buscar produtos:', error);
+                setError('Erro ao buscar produtos');
+            }
+        };
+
         fetchProdutos();
     }, []);
-
 
     const handleSearch = (query) => {
         if (query === '') {
@@ -63,48 +56,23 @@ const ListaProdutos = () => {
     const handleNextPage = () => {
         setCurrentPage(prevPage => (prevPage < totalPages ? prevPage + 1 : prevPage));
     };
-
+    
     const handleLastPage = () => {
         setCurrentPage(totalPages);
-    };
-
-    const handlePageInputChange = (event) => {
-        const value = event.target.value;
-        if (value === '' || /^[0-9\b]+$/.test(value)) {
-            setCurrentPage(value ? parseInt(value, 10) : '');
-        }
-    };
-
-    const handlePageInputBlur = () => {
-        // Garantir que o valor da página não saia do intervalo válido
-        if (currentPage < 1) {
-            setCurrentPage(1);
-        } else if (currentPage > totalPages) {
-            setCurrentPage(totalPages);
-        }
-    };
-
-    const handlePageInputEnter = () => {
-        if (currentPage > 0 && currentPage <= totalPages) {
-            return;
-        } else {
-            setCurrentPage(1); // Resetar para a primeira página, se o número for inválido
-        }
     };
 
     if (error) {
         return <div>{error}</div>;
     }
 
-    const handleEdit = async (editedProduct) => {
+    const handleEdit = (editedProduct) => {
         setProdutos(produtos.map(produto => (produto.id === editedProduct.id ? editedProduct : produto)));
         setProdutosFiltrados(produtosFiltrados.map(produto => (produto.id === editedProduct.id ? editedProduct : produto)));
-        await fetchProdutos(); // Recarrega a lista após editar
+        window.location.reload();
     };
 
-    const handleDelete = async (productId) => {
+    const handleDelete = (productId) => {
         setProdutos(produtos.filter(p => p.id !== productId));
-        await fetchProdutos(); // Recarrega a lista após deletar
     };
 
     return (
@@ -126,12 +94,12 @@ const ListaProdutos = () => {
                         <tr key={produto.id}>
                             <td hidden>{produto.id}</td>
                             <td>{produto.prod_nome}</td>
-                            <td>{formatarPreco(produto.prod_preco)}</td>
+                            <td>R$ {produto.prod_preco}</td>
                             <td>{produto.prod_cod}</td>
                             <td>
                                 <div className='buttons-Action'>
-                                    <ButtonEditar produto={produto} onEdit={handleEdit} />
-                                    <ButtonApagar produto={produto} onDelete={handleDelete} />
+                                <ButtonEditar produto={produto} onEdit={handleEdit} />
+                                <ButtonApagar produto={produto} onDelete={handleDelete} />
                                 </div>
                             </td>
                         </tr>
@@ -139,35 +107,20 @@ const ListaProdutos = () => {
                 </tbody>
             </table>
             <div className="pagination">
-                <div className='pagination-Order'>
-                    <button className="button-Pagination" onClick={handlePrevPage} disabled={currentPage === 1}>
-                        Anterior
-                    </button>
-                    <span>
-                        <input
-                            type="number"
-                            value={currentPage || ''}
-                            onChange={handlePageInputChange}
-                            onBlur={handlePageInputBlur}
-                            onKeyPress={(e) => e.key === 'Enter' && handlePageInputEnter()}
-                            min="1"
-                            max={totalPages}
-                            style={{ width: '50px', textAlign: 'center' }}
-                        />
-                        de {totalPages}
-                    </span>
-                    <button className="button-Pagination" onClick={handleNextPage} disabled={currentPage === totalPages}>
-                        Próxima
-                    </button>
-                </div>
-
-                <div className='pagination-Last'>
-                    <button className="button-Pagination" onClick={handleLastPage} disabled={currentPage === totalPages}>
-                        Última Página
-                    </button>
-                </div>
+                <button className="button-Pagination" onClick={handlePrevPage} disabled={currentPage === 1}>
+                    Anterior
+                </button>
+                <span>{currentPage} de {totalPages}</span>
+                <button className="button-Pagination" onClick={handleNextPage} disabled={currentPage === totalPages}>
+                    Próxima
+                </button>
             </div>
-
+            <div className='pagination-Last'>
+                <button onClick={handleLastPage} disabled={currentPage === totalPages}>
+                    Última Página
+                </button>
+            </div>
+            
         </div>
     );
 };
