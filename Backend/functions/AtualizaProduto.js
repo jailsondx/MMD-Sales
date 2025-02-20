@@ -3,7 +3,17 @@ const FormataValor = require('./FormataValor');
 async function AtualizaProduto(DBconnection, id, produto) {
     try {
         // Realiza a formatação dos valores
-        produto.prod_preco = FormataValor(produto.prod_preco, ',', '.');
+        // Verificando se o valor de produto.preco é um número
+        if (typeof produto.preco === 'string') {
+            // Se for string, tenta converter para número (float)
+            produto.preco = parseFloat(produto.preco.replace(',', '.'));
+    
+            // Verifica se a conversão foi bem-sucedida (não é NaN)
+            if (isNaN(produto.preco)) {
+                // Se não for um número válido, você pode lançar um erro ou tratar de acordo
+                throw new Error('O preço fornecido não é válido.');
+            }
+        }
         produto.prod_nome = produto.prod_nome.toUpperCase();
 
         // Preparando a consulta SQL

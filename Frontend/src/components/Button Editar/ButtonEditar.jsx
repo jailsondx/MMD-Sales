@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
-import { Form, Button } from 'react-bootstrap';
+import { Button, Form, InputGroup } from 'react-bootstrap';
 import { Alert, Snackbar } from '@mui/material';
 
 
 import './ButtonEditar.css';
+
 
 const ButtonEditar = ({ produto, onEdit }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -33,6 +34,9 @@ const ButtonEditar = ({ produto, onEdit }) => {
 
     const handleSave = async () => {
         try {
+            // Antes de enviar ao backend, converta o valor de preco para float
+            editedProduct.prod_preco = parseFloat(editedProduct.prod_preco.replace(',', '.')); // Corrige a conversão de string com vírgula
+
             const response = await axios.put(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/produtos/${editedProduct.id}`, editedProduct);
             if (response.data === "Produto atualizado com sucesso!") {
                 onEdit(editedProduct);
@@ -70,6 +74,7 @@ const ButtonEditar = ({ produto, onEdit }) => {
                             onChange={handleChange}
                         />
                     </Form.Group>
+
                     <Form.Group controlId="formCodigo">
                         <Form.Label>Código</Form.Label>
                         <Form.Control
@@ -80,16 +85,21 @@ const ButtonEditar = ({ produto, onEdit }) => {
                             onChange={handleChange}
                         />
                     </Form.Group>
+
                     <Form.Group controlId="formPreco">
                         <Form.Label>Preço</Form.Label>
-                        <Form.Control
-                            className='input-Cadastro'
-                            type="number"
-                            name="prod_preco"
-                            value={editedProduct.prod_preco}
-                            onChange={handleChange}
-                        />
+                        <InputGroup className="formMoeda">
+                            <InputGroup.Text>R$</InputGroup.Text>
+                            <Form.Control
+                                className='input-Cadastro'
+                                type="text"
+                                name="prod_preco"
+                                value={editedProduct.prod_preco}
+                                onChange={handleChange}
+                            />
+                        </InputGroup>
                     </Form.Group>
+
                     <Form.Group controlId="formPreco">
                         <Form.Label>Informações Adicionais</Form.Label>
                         <Form.Control
@@ -100,6 +110,7 @@ const ButtonEditar = ({ produto, onEdit }) => {
                             onChange={handleChange}
                         />
                     </Form.Group>
+
                     <span className='buttons-Modal-Group'>
                         <Button variant="primary" className='button-Modal' onClick={handleSave}>Salvar</Button>
                         <Button variant="danger" className='button-Modal' onClick={closeModal}>Cancelar</Button>

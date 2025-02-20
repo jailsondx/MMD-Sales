@@ -3,6 +3,7 @@ import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { Alert, Snackbar } from '@mui/material';
+
 import './FormCadastroProduto.css';
 
 function FormCadastroProduto() {
@@ -10,6 +11,7 @@ function FormCadastroProduto() {
         nome: '',
         codigoBarras: '',
         preco: '',
+        estoque: '', // Adicionando o estoque no estado
         informacoesAdicionais: ''
     });
 
@@ -26,10 +28,10 @@ function FormCadastroProduto() {
 
         if (name === 'preco') {
             // Substituir vírgulas por pontos, e limitar o valor ao formato de número
-            const formattedValue = value.replace(',', '.');
+            //const formattedValue = value.replace(',', '.');
             setProduto(prevProduto => ({
                 ...prevProduto,
-                [name]: formattedValue
+                [name]: value
             }));
         } else {
             setProduto(prevProduto => ({
@@ -55,9 +57,16 @@ function FormCadastroProduto() {
         console.clear();
         console.table([produto]);
 
+        // Antes de enviar ao backend, converta o valor de preco para float
+        const precoFormatado = parseFloat(produto.preco.replace(',', '.')); // Garante que seja um número
+
         try {
-            const response = await axios.post(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/CadastroProduto`, { produto });
-            console.log('Resposta do Servidor:', response.data);
+            const response = await axios.post(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/CadastroProduto`, {
+                produto: {
+                    ...produto,
+                    preco: precoFormatado // Envia como número para o backend
+                }
+            });
 
             if(response.data.mensagem === 'Produto já Cadastrado'){
                 setSnackbarMessage(response.data.mensagem);
@@ -78,6 +87,7 @@ function FormCadastroProduto() {
                 nome: '',
                 codigoBarras: '',
                 preco: '',
+                estoque: '',
                 informacoesAdicionais: ''
             });
         }
@@ -127,7 +137,7 @@ function FormCadastroProduto() {
                         <div className='formCampo'>
                             <Form.Group controlId="formPreco">
                                 <Form.Label>Preço:</Form.Label>
-                                <InputGroup className="mb-3">
+                                <InputGroup className="formMoeda">
                                     <InputGroup.Text>R$</InputGroup.Text>
                                     <Form.Control
                                         className='input-Cadastro'
@@ -143,13 +153,46 @@ function FormCadastroProduto() {
                             </Form.Group>
                         </div>
 
+                        <div className='formCampo Inputs2'>
+                            <Form.Group controlId="formEstoque">
+                                <Form.Label>Estoque:</Form.Label>
+                                <Form.Control
+                                    className='input-Cadastro'
+                                    type="number"
+                                    name="estoque"
+                                    value={produto.estoque}
+                                    autoComplete='no'
+                                    onChange={handleChange}
+                                    placeholder="Digite o estoque atual"
+                                    required
+                                />
+                            </Form.Group>
+
+                            <Form.Group controlId="formUnidadeMedida">
+                                <Form.Label>Unidade de Medida:</Form.Label>
+                                <Form.Control
+                                    as="select"
+                                    className='input-Cadastro'
+                                    name="tipo"
+                                    value={produto.tipo} // Acompanhando a unidade de medida no estado
+                                    onChange={handleChange}
+                                    required
+                                >
+                                    <option value="UN">UN</option>
+                                    <option value="CX">CX</option>
+                                </Form.Control>
+                            </Form.Group>
+                        </div>
+
+
+                        {/* Alterando informações adicionais para input simples */}
                         <div className='formCampo'>
                             <Form.Group controlId="formInformacoesAdicionais">
                                 <Form.Label>Informações Adicionais (Opcional):</Form.Label>
                                 <Form.Control
-                                    as="textarea"
+                                    className="input-Cadastro"
+                                    type="text"  // Alterado para input simples de texto
                                     name="informacoesAdicionais"
-                                    className="informacoesAdicionais"
                                     autoComplete='no'
                                     value={produto.informacoesAdicionais}
                                     onChange={handleChange}

@@ -53,7 +53,7 @@ function FormCadastroMercadoria() {
         } catch (error) {
             console.error('Houve um erro ao enviar as informações!', error);
             
-            setSnackbarMessage(error.response?.data?.erro || 'Erro ao cadastrar produto');
+            setSnackbarMessage(error.response?.data?.erro || 'Erro ao cadastrar Mercuto');
             setSnackbarSeverity('error');
         } finally {
             setShowTemporaryModal(true);
@@ -67,11 +67,11 @@ function FormCadastroMercadoria() {
     };
 
     return (
-        <div className='Cad-Prod'>
+        <div className='Cad-Merc'>
             <div className='Title-Page'>
                 <h1>Cadastro de Mercadorias de Balança (Peso)</h1>
             </div>
-            <div className='Form-Cad-Prod'>
+            <div className='Form-Cad-Merc'>
                 <div>
                     <Form onSubmit={handleSubmit}>
                         <div className='formCampo'>

@@ -118,6 +118,8 @@ const ListaProdutos = () => {
                         <th className='Lista-Nome-Prod'>Produto</th>
                         <th className='Lista-Preco'>Preço</th>
                         <th className='Lista-Cod-Prod'>Cod. Barras</th>
+                        <th className='Lista-Estoque'>Estoque</th>
+                        <th className='Lista-Tipo'>Tipo</th>
                         <th className='Lista-Actions'>Ações</th>
                     </tr>
                 </thead>
@@ -128,6 +130,8 @@ const ListaProdutos = () => {
                             <td>{produto.prod_nome}</td>
                             <td>{formatarPreco(produto.prod_preco)}</td>
                             <td>{produto.prod_cod}</td>
+                            <td>{produto.prod_estoque}</td>
+                            <td>{produto.prod_tipo}</td>
                             <td>
                                 <div className='buttons-Action'>
                                     <ButtonEditar produto={produto} onEdit={handleEdit} />

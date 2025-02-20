@@ -11,10 +11,13 @@
 
 .Title-Page, .Form-Cad-Prod{
     display: flex;
+    flex-wrap: nowrap;
     flex-direction: row;
 
     width: 35vw;
-    height: 90%;
+    min-width: 300px;
+    height: 90dvh;
+    min-height: 400px;
     
     justify-content: center;
     align-items: center;
@@ -23,7 +26,7 @@
 
 .Form-Cad-Prod{
     color: whitesmoke;
-    font-size: 3vh;
+    font-size: 2.5vh;
     background: rgba(0, 0, 0, 0.7);
 
     border: 20%;
@@ -40,6 +43,29 @@
     padding-bottom: 2vh;
 }
 
+.formMoeda{
+    width: 30dvw;
+}
+
+
+.Inputs2{
+    display: flex;
+    gap: 10px;
+    flex-direction: row;
+    justify-content: space-between;
+
+    width: 30vw;
+}
+
+.Inputs2 input{
+    width: 15dvw;
+}
+
+.Inputs2 select, options{
+    width: 5dvw;
+}
+
+
 Button{
     width: 30vw;
     margin-top: 5%;
@@ -47,7 +73,7 @@ Button{
 
 .informacoesAdicionais{
     width: 30vw;
-    height: 15vh;
+    height: 5vh;
     resize: none;
 }
 

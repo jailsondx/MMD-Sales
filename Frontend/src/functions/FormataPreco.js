@@ -11,7 +11,8 @@ function formatarPreco(preco) {
     });
 
     // Substituir o ponto por vírgula
-    return precoFormatado.replace('.', ',');
+    //return precoFormatado.replace('.', ',');
+    return precoFormatado;
 }
 
 export default formatarPreco;
