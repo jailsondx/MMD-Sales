@@ -12,6 +12,7 @@ function FormCadastroProduto() {
         codigoBarras: '',
         preco: '',
         estoque: '', // Adicionando o estoque no estado
+        tipo: "UN",
         informacoesAdicionais: ''
     });
 
