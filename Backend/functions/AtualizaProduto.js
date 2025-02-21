@@ -1,5 +1,3 @@
-const FormataValor = require('./FormataValor');
-
 async function AtualizaProduto(DBconnection, id, produto) {
     try {
         // Realiza a formatação dos valores
@@ -7,13 +5,15 @@ async function AtualizaProduto(DBconnection, id, produto) {
         if (typeof produto.preco === 'string') {
             // Se for string, tenta converter para número (float)
             produto.preco = parseFloat(produto.preco.replace(',', '.'));
-    
+
             // Verifica se a conversão foi bem-sucedida (não é NaN)
             if (isNaN(produto.preco)) {
-                // Se não for um número válido, você pode lançar um erro ou tratar de acordo
-                throw new Error('O preço fornecido não é válido.');
+                // Se não for um número válido, retorna status 400 (Bad Request)
+                return { status: 400, erro: 'O preço fornecido não é válido.' };
             }
         }
+
+        //UPPCASE no nome do produto
         produto.prod_nome = produto.prod_nome.toUpperCase();
 
         // Preparando a consulta SQL
@@ -25,12 +25,10 @@ async function AtualizaProduto(DBconnection, id, produto) {
         // Executando a consulta
         await DBconnection.query(sql, values);
 
-        console.log('Produto atualizado com sucesso!');
-
-        return "200";
+        return { status: 200, mensagem: 'Produto Atualizado com sucesso!' };
     } catch (error) {
         console.error('Erro ao atualizar produto:', error);
-        return "500";
+        return { status: 500, erro: 'Erro ao cadastrar produto' };
     } finally {
         // Fechando a conexão, se necessário
         // await DBconnection.end();

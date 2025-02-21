@@ -58,17 +58,53 @@ app.post('/api/CadastroProduto', async (req, res) => {
   // Limpa o Console
   console.clear();
 
-  console.log('Informacoes do Produto:', produto);
-
   try {
     // Função que faz o cadastro no DB
-    const statusCadastro = await CadastraProduto(DBconnection, produto, res);
+    const resultadoCadastro = await CadastraProduto(DBconnection, produto);
 
-    // Respondendo ao cliente
-    res.send(statusCadastro);
+    // Usando switch-case para tratar cada status
+    switch (resultadoCadastro.status) {
+      case 200:
+        // Produto cadastrado com sucesso
+        res.status(200).json({
+          mensagem: resultadoCadastro.mensagem || 'Produto Cadastrado com sucesso!'
+        });
+        break;
+
+      case 400:
+        // Dados inválidos (ex: preço inválido)
+        res.status(400).json({
+          erro: resultadoCadastro.erro || 'Dados inválidos'
+        });
+        break;
+
+      case 409:
+        // Produto já cadastrado
+        res.status(409).json({
+          erro: resultadoCadastro.mensagem || 'Produto já Cadastrado'
+        });
+        break;
+
+      case 500:
+        // Erro interno do servidor
+        res.status(500).json({
+          erro: resultadoCadastro.erro || 'Erro interno ao cadastrar produto'
+        });
+        break;
+
+      default:
+        // Status não tratado especificamente
+        res.status(resultadoCadastro.status).json({
+          erro: resultadoCadastro.mensagem || resultadoCadastro.erro || 'Resposta inesperada do servidor'
+        });
+    }
   } catch (error) {
     console.error('Erro no cadastro do produto:', error);
-    res.status(500).send('Erro no cadastro do produto');
+
+    // Em caso de erro inesperado, retorna status 500 (Erro interno do servidor)
+    res.status(500).json({
+      erro: 'Erro no cadastro do produto'
+    });
   }
 });
 
@@ -112,15 +148,49 @@ app.put('/api/produtos/:id', async (req, res) => {
   try {
       const resAtualizaProduto = await AtualizaProduto(DBconnection, id, produto);
       
-      if(resAtualizaProduto == '200'){
-        res.send("Produto atualizado com sucesso!");
-      } else {
-        res.status(500).json({ message: 'Erro ao atualizar produto' });
-      }
+       // Usando switch-case para tratar cada status
+    switch (resAtualizaProduto.status) {
+      case 200:
+        // Produto cadastrado com sucesso
+        res.status(200).json({
+          mensagem: resAtualizaProduto.mensagem || 'Produto Atualizado com sucesso!'
+        });
+        break;
 
+      case 400:
+        // Dados inválidos (ex: preço inválido)
+        res.status(400).json({
+          erro: resAtualizaProduto.erro || 'Dados inválidos'
+        });
+        break;
+
+      case 409:
+        // Produto já cadastrado
+        res.status(409).json({
+          erro: resAtualizaProduto.mensagem || 'Produto já Cadastrado'
+        });
+        break;
+
+      case 500:
+        // Erro interno do servidor
+        res.status(500).json({
+          erro: resAtualizaProduto.erro || 'Erro interno ao atualizar o produto'
+        });
+        break;
+
+      default:
+        // Status não tratado especificamente
+        res.status(resultadoCadastro.status).json({
+          erro: resultadoCadastro.mensagem || resultadoCadastro.erro || 'Resposta inesperada do servidor'
+        });
+    }
   } catch (error) {
-      res.send("ERROR");
-      //res.status(500).json({ message: 'Erro ao atualizar produto' });
+    console.error('Erro no editar o produto:', error);
+
+    // Em caso de erro inesperado, retorna status 500 (Erro interno do servidor)
+    res.status(500).json({
+      erro: 'Erro na atualização do produto'
+    });
   }
 });
 

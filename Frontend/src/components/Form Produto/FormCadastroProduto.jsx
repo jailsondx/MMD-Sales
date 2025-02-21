@@ -1,21 +1,25 @@
-import React, { useState, useRef, useEffect } from 'react';
-import axios from 'axios';
+import { useState, useRef, useEffect } from 'react';
+import axios, { AxiosError } from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Form, InputGroup } from 'react-bootstrap';
 import { Alert, Snackbar } from '@mui/material';
 
 import './FormCadastroProduto.css';
 
-function FormCadastroProduto() {
-    const [produto, setProduto] = useState({
-        nome: '',
-        codigoBarras: '',
-        preco: '',
-        estoque: '', // Adicionando o estoque no estado
-        tipo: "UN",
-        informacoesAdicionais: ''
-    });
+const initialForm = {
+    nome: '',
+    codigoBarras: '',
+    preco: '',
+    estoque: '',
+    tipo: "UN",
+    informacoesAdicionais: ''
+}
 
+function FormCadastroProduto() {
+    const [produto, setProduto] = useState(initialForm);
+    const [showTemporaryModal, setShowTemporaryModal] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
+    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
     const nomeInputRef = useRef(null);
 
     useEffect(() => {
@@ -28,12 +32,14 @@ function FormCadastroProduto() {
         const { name, value } = event.target;
 
         if (name === 'preco') {
-            // Substituir vírgulas por pontos, e limitar o valor ao formato de número
-            //const formattedValue = value.replace(',', '.');
-            setProduto(prevProduto => ({
-                ...prevProduto,
-                [name]: value
-            }));
+            // Regex para permitir apenas números e uma vírgula
+            const regex = /^\d*\,?\d*$/;
+            if (regex.test(value)) {
+                setProduto(prevProduto => ({
+                    ...prevProduto,
+                    [name]: value
+                }));
+            }
         } else {
             setProduto(prevProduto => ({
                 ...prevProduto,
@@ -41,10 +47,6 @@ function FormCadastroProduto() {
             }));
         }
     };
-
-    const [showTemporaryModal, setShowTemporaryModal] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState('');
-    const [snackbarSeverity, setSnackbarSeverity] = useState('success');
 
     const handleClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -55,8 +57,7 @@ function FormCadastroProduto() {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        console.clear();
-        console.table([produto]);
+        //console.clear();
 
         // Antes de enviar ao backend, converta o valor de preco para float
         const precoFormatado = parseFloat(produto.preco.replace(',', '.')); // Garante que seja um número
@@ -69,28 +70,32 @@ function FormCadastroProduto() {
                 }
             });
 
-            if(response.data.mensagem === 'Produto já Cadastrado'){
-                setSnackbarMessage(response.data.mensagem);
-                setSnackbarSeverity('error');
-            } else {
-                setSnackbarMessage(response.data.mensagem || 'Produto Cadastrado com Sucesso');
-                setSnackbarSeverity('success');
-            }
-
+            setSnackbarMessage(response.data.mensagem || 'Produto cadastrado com sucesso');
+            setSnackbarSeverity('success');
+            setProduto(initialForm);
         } catch (error) {
-            console.error('Houve um erro ao enviar as informacoes!', error);
+            if (error instanceof AxiosError) {
+                console.error('Houve um erro ao cadastrar as informações!', error);
 
-            setSnackbarMessage(error.response?.data?.erro || 'Erro ao cadastrar produto');
+                // Trata erros de rede ou respostas com status 500
+                if (error.response) {
+                    // Erro retornado pelo backend (ex: status 500)
+                    setSnackbarMessage(error.response.data.erro || 'Erro ao cadastrar produto');
+                } else if (error.request) {
+                    // Erro de rede (sem resposta do servidor)
+                    setSnackbarMessage('Erro de conexão com o servidor');
+                } else {
+                    // Outros erros (ex: erro ao configurar a requisição)
+                    setSnackbarMessage('Erro ao enviar os dados');
+                }
+            } else {
+                console.error('Erro inesperado:', error);
+                setSnackbarMessage('Erro inesperado ao enviar os dados');
+            }
             setSnackbarSeverity('error');
         } finally {
+            // Exibe o Snackbar
             setShowTemporaryModal(true);
-            setProduto({
-                nome: '',
-                codigoBarras: '',
-                preco: '',
-                estoque: '',
-                informacoesAdicionais: ''
-            });
         }
     };
 
@@ -142,7 +147,7 @@ function FormCadastroProduto() {
                                     <InputGroup.Text>R$</InputGroup.Text>
                                     <Form.Control
                                         className='input-Cadastro'
-                                        type="text"  // Alterado para text
+                                        type="text"
                                         name="preco"
                                         value={produto.preco}
                                         autoComplete='no'
@@ -210,8 +215,8 @@ function FormCadastroProduto() {
             </div>
             <Snackbar open={showTemporaryModal} autoHideDuration={3000} onClose={handleClose}>
                 <Alert
-                className='alert-Snackbar'
-                severity={snackbarSeverity}>
+                    className='alert-Snackbar'
+                    severity={snackbarSeverity}>
                     {snackbarMessage}
                 </Alert>
             </Snackbar>

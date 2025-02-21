@@ -10,7 +10,9 @@ CREATE TABLE IF NOT EXISTS produtos (
     prod_nome VARCHAR(50) NOT NULL,              -- Nome do produto
     prod_cod VARCHAR(30) NOT NULL,               -- Código do produto
     prod_preco FLOAT(20) NOT NULL,               -- Preço do produto
-    prod_add_infor VARCHAR(255)                  -- Informação adicional do produto
+    prod_add_infor VARCHAR(255),                  -- Informação adicional do produto
+    prod_estoque INT,
+    prod_tipo VARCHAR (10)
 );
 
 -- Criação da tabela 'balanca' com 'id' como AUTO_INCREMENT
