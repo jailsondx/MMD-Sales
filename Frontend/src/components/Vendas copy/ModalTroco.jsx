@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Form, InputGroup, Button } from 'react-bootstrap';
+import axios from 'axios'; // Adicione a importação do axios
 import './Modais.css';
 
 const ModalTroco = ({
@@ -10,7 +11,9 @@ const ModalTroco = ({
     setValorRecebido,
     troco,
     setTroco,
-    inputTrocoRef
+    inputTrocoRef,
+    produtos, // Recebe a lista de produtos vendidos
+    total // Recebe o valor total da venda
 }) => {
     const [calculoFeito, setCalculoFeito] = useState(false);
 
@@ -19,9 +22,44 @@ const ModalTroco = ({
         setCalculoFeito(true);
     };
 
+    // Função para enviar a venda para o backend
+    const enviarVenda = async () => {
+        try {
+            // Verifica se o valorRecebido é nulo ou NaN, e se for, atribui 0.00
+            const valorRecebidoFinal = (valorRecebido == '' || isNaN(valorRecebido)) ? 0.00 : valorRecebido;
+
+            // Define o payload com os dados da venda e dos produtos
+            const vendaData = {
+                produtos: produtos.map((produto) => ({
+                    prod_codigo: produto.prod_cod,
+                    prod_nome: produto.prod_nome,
+                    quantidade: produto.quantidade,
+                    prod_preco: produto.prod_preco
+                })),
+                total: total,
+                troco: troco,  // Verifique se você tem esse valor no frontend
+                valorRecebido: valorRecebidoFinal  // Envia o valor final após verificação
+            };
+
+            // Faz a requisição para o backend (substitua pelo endpoint correto)
+            await axios.post(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/vendas/fechar`, vendaData, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            // Após o envio da venda, recarrega a página ou redefine os dados da venda atual
+            handleTrocoModalClose();
+            window.location.reload(); // Recarrega a página para simular finalização da venda
+
+        } catch (error) {
+            console.error("Erro ao enviar venda:", error);
+            alert("Erro ao finalizar a venda. Tente novamente.");
+        }
+    };
+
     const handleFinalizarVenda = () => {
-        handleTrocoModalClose();
-        window.location.reload(); // Recarrega a página para simular finalização da venda
+        enviarVenda(); // Envia a venda para o backend
     };
 
     const handleKeyDown = (e) => {
@@ -62,7 +100,10 @@ const ModalTroco = ({
                 {troco !== null && (
                     <div className="troco-result">
                         <span className='text-Troco'>Troco:</span>
-                        <span className='text-Value-Troco'><b>R$ {troco.toFixed(2).toString().replace('.', ',')}</b></span>
+                        <span className='text-Value-Troco'>
+                            <b>R$ {(isNaN(troco) || troco === null || troco === undefined) ? '0,00' : troco.toFixed(2).toString().replace('.', ',')}</b>
+                        </span>
+
                     </div>
                 )}
             </Modal.Body>
@@ -78,7 +119,7 @@ const ModalTroco = ({
                 ) : (
                     <Button
                         variant="primary"
-                        onClick={handleFinalizarVenda}
+                        onClick={handleFinalizarVenda} // Finaliza a venda
                         className="custom-modal-button-primary"
                     >
                         Finalizar Venda

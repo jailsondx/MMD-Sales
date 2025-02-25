@@ -22,6 +22,7 @@ const PesquisaNaBalanca = require('./functions/PesquisaNaBalanca');
 const VerificaProduto = require('./functions/VerificaProduto');
 const RegistrarVenda = require('./functions/RegistrarVenda');
 const ConsultarVendas = require('./functions/ConsultarVendas');
+const ImprimirCupom = require('./functions/printer');
 
 
 const PORT = 3001;
@@ -361,6 +362,27 @@ app.post('/api/vendas/consultar', async (req, res) => {
   }
 });
 
+// Rota para imprimir o troco
+app.post('/api/vendas/impressao', async (req, res) => {
+  const { produtos, troco, valorRecebido, total } = req.body;
+  const valorRecebidoFinal = valorRecebido || 0;
+  const trocoFinal = troco || 0;
+
+  const valorRecebidoFloat = parseFloat(valorRecebidoFinal);
+  
+  try {
+    const printerRequest = await ImprimirCupom(produtos, total, valorRecebidoFloat, trocoFinal);
+
+    if (printerRequest.status === 200) {
+      res.status(200).json({ message: printerRequest.message || 'Cupom impresso com sucesso.' });
+    } else {
+      res.status(500).json({ error: printerRequest.error || '500: Erro ao imprimir cupom.' });
+    }
+  } catch (error) {
+    console.error('Server.js: Erro ao imprimir cupom:', error);
+    res.status(500).json({ error: 'Erro ao imprimir cupom.' });
+  }
+});
 
 
 

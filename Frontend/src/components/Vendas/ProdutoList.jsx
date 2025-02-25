@@ -1,6 +1,6 @@
-import React from 'react';
 import BotaoRemover from '../Button Remover da Lista/ButtonRemover';
 import './ProdutoList.css';
+import PropTypes from 'prop-types';
 
 const ProdutoList = ({ produtos, handleRemove }) => {
     const produtosInvertidos = [...produtos].reverse(); // Inverte a ordem dos produtos
@@ -40,6 +40,18 @@ const ProdutoList = ({ produtos, handleRemove }) => {
             </table>
         </div>
     );
+};
+ProdutoList.propTypes = {
+    produtos: PropTypes.arrayOf(
+        PropTypes.shape({
+            prod_nome: PropTypes.string.isRequired,
+            prod_add_infor: PropTypes.string,
+            quantidade: PropTypes.number.isRequired,
+            prod_preco: PropTypes.number.isRequired,
+            valor_total: PropTypes.number.isRequired,
+        })
+    ).isRequired,
+    handleRemove: PropTypes.func.isRequired,
 };
 
 export default ProdutoList;

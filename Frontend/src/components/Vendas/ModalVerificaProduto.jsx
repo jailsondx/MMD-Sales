@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Modal, Form, InputGroup, Button } from 'react-bootstrap';
 import axios from 'axios';
-import { HiClipboardCopy } from "react-icons/hi";
 import { FcViewDetails } from "react-icons/fc";
 import './Modais.css';
+
+const SERVER_IP = import.meta.env.VITE_SERVER_IP;
 
 const ModalVerificaProduto = ({
     showModal,
@@ -19,7 +21,7 @@ const ModalVerificaProduto = ({
     const handleSearch = async () => {
         setErrorMessage(''); // Limpa mensagens de erro antes de fazer a requisição
         try {
-            const response = await axios.get(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/produtos/verifica`, {
+            const response = await axios.get(`http://${SERVER_IP}:3001/api/produtos/verifica`, {
                 params: { query: searchTerm },
             });
 
@@ -159,6 +161,12 @@ const ModalVerificaProduto = ({
             </Modal.Footer>
         </Modal>
     );
+};
+ModalVerificaProduto.propTypes = {
+    showModal: PropTypes.bool.isRequired,
+    handleModalClose: PropTypes.func.isRequired,
+    inputModalRef: PropTypes.object.isRequired,
+    handleAddProduto: PropTypes.func.isRequired,
 };
 
 export default ModalVerificaProduto;

@@ -1,14 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import { Form, Button, Alert } from 'react-bootstrap';
+import { Form, Alert } from 'react-bootstrap';
 import { Beforeunload } from 'react-beforeunload';
-import FormataTotal from './FormataTotal';
+import FormataTotal from '../../functions/FormataTotal';
 import ProdutoList from './ProdutoList';
 import ModalAdicionarProdutoSemCodigo from './ModalAdicionarProdutoSemCodigo';
 import ModalTroco from './ModalTroco';
 import ModalVerificaProduto from './ModalVerificaProduto';
 import ModalAlert from './ModalAlert';
 import './Vendas.css';
+
+const SERVER_IP = import.meta.env.VITE_SERVER_IP;
 
 const TelaVendas = () => {
     // Estados principais
@@ -104,7 +106,7 @@ const TelaVendas = () => {
 
         // Busca produto via API
         try {
-            const response = await axios.get(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/produtos/vendas`, {
+            const response = await axios.get(`http://${SERVER_IP}:3001/api/produtos/vendas`, {
                 params: { barcode }
             });
 

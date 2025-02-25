@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
-import formatarValor from '../Vendas/FormatarValor';
+import formatarValor from '../../functions/FormatarValor';
 
 import './ConsultaVendas.css';
 

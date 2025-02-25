@@ -260,6 +260,8 @@ const TelaVendas = () => {
                 setValorRecebido={setValorRecebido}
                 troco={troco}
                 inputTrocoRef={inputTrocoRef}
+                produtos={produtos} // Passa a lista de produtos
+                total={total} // Passa o valor total
             />
 
             <ModalVerificaProduto

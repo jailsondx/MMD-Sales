@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Modal, Form, InputGroup, Button } from 'react-bootstrap';
-import axios from 'axios'; // Adicione a importação do axios
+import axios from 'axios';
+import ModalImpressao from './ModalImpressao'; // Importe o ModalImpressao
 import './Modais.css';
 
 const ModalTroco = ({
@@ -12,23 +14,23 @@ const ModalTroco = ({
     troco,
     setTroco,
     inputTrocoRef,
-    produtos, // Recebe a lista de produtos vendidos
-    total // Recebe o valor total da venda
+    produtos,
+    total
 }) => {
     const [calculoFeito, setCalculoFeito] = useState(false);
+    const [showPrintConfirmationModal, setShowPrintConfirmationModal] = useState(false); // Estado para controlar o modal de impressão
+    const [vendaData, setVendaData] = useState(null); // Estado para armazenar os dados da venda
 
     const handleCalcular = () => {
         handleTrocoCalculate();
         setCalculoFeito(true);
     };
 
-    // Função para enviar a venda para o backend
     const enviarVenda = async () => {
         try {
-            // Verifica se o valorRecebido é nulo ou NaN, e se for, atribui 0.00
-            const valorRecebidoFinal = (valorRecebido == '' || isNaN(valorRecebido)) ? 0.00 : valorRecebido;
+            // Substitui a vírgula por ponto
+            let valorRecebidoFinal = valorRecebido ? valorRecebido.replace(',', '.') : '0.00';
 
-            // Define o payload com os dados da venda e dos produtos
             const vendaData = {
                 produtos: produtos.map((produto) => ({
                     prod_codigo: produto.prod_cod,
@@ -37,20 +39,21 @@ const ModalTroco = ({
                     prod_preco: produto.prod_preco
                 })),
                 total: total,
-                troco: troco,  // Verifique se você tem esse valor no frontend
-                valorRecebido: valorRecebidoFinal  // Envia o valor final após verificação
+                troco: troco,
+                valorRecebido: valorRecebidoFinal
             };
 
-            // Faz a requisição para o backend (substitua pelo endpoint correto)
             await axios.post(`http://${import.meta.env.VITE_SERVER_IP}:3001/api/vendas/fechar`, vendaData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
             });
 
-            // Após o envio da venda, recarrega a página ou redefine os dados da venda atual
+            // Armazena os dados da venda no estado
+            setVendaData(vendaData);
+
             handleTrocoModalClose();
-            window.location.reload(); // Recarrega a página para simular finalização da venda
+            setShowPrintConfirmationModal(true); // Exibe o modal de confirmação de impressão
 
         } catch (error) {
             console.error("Erro ao enviar venda:", error);
@@ -59,7 +62,7 @@ const ModalTroco = ({
     };
 
     const handleFinalizarVenda = () => {
-        enviarVenda(); // Envia a venda para o backend
+        enviarVenda();
     };
 
     const handleKeyDown = (e) => {
@@ -72,62 +75,98 @@ const ModalTroco = ({
         }
     };
 
-    return (
-        <Modal show={showTrocoModal} onHide={handleTrocoModalClose} className="custom-modal">
-            <Modal.Header closeButton className="custom-modal-header">
-                <Modal.Title className="custom-modal-title">Calcular Troco</Modal.Title>
-            </Modal.Header>
-            <Modal.Body className="custom-modal-body">
-                <Form.Group controlId="formValorRecebido">
-                    <Form.Label className="custom-modal-label">Valor Recebido</Form.Label>
-                    <InputGroup className="mb-3">
-                        <InputGroup.Text className="custom-modal-input-group-text">R$</InputGroup.Text>
-                        <Form.Control
-                            type="text"
-                            value={valorRecebido}
-                            autoComplete='off'
-                            onChange={(e) => {
-                                setValorRecebido(e.target.value);
-                                setCalculoFeito(false); // Reseta o estado do cálculo feito se o valor mudar
-                                setTroco(null); // Limpa o troco quando o valor recebido é alterado
-                            }}
-                            ref={inputTrocoRef}
-                            onKeyDown={handleKeyDown}
-                            className="custom-modal-input"
-                        />
-                    </InputGroup>
-                </Form.Group>
-                {troco !== null && (
-                    <div className="troco-result">
-                        <span className='text-Troco'>Troco:</span>
-                        <span className='text-Value-Troco'>
-                            <b>R$ {(isNaN(troco) || troco === null || troco === undefined) ? '0,00' : troco.toFixed(2).toString().replace('.', ',')}</b>
-                        </span>
+    const handlePrintConfirmationModalClose = () => {
+        setShowPrintConfirmationModal(false);
+        window.location.reload();
+    }
 
-                    </div>
-                )}
-            </Modal.Body>
-            <Modal.Footer className="custom-modal-footer">
-                {!calculoFeito ? (
-                    <Button
-                        variant="primary"
-                        onClick={handleCalcular}
-                        className="custom-modal-button-primary"
-                    >
-                        Calcular
-                    </Button>
-                ) : (
-                    <Button
-                        variant="primary"
-                        onClick={handleFinalizarVenda} // Finaliza a venda
-                        className="custom-modal-button-primary"
-                    >
-                        Finalizar Venda
-                    </Button>
-                )}
-            </Modal.Footer>
-        </Modal>
+    return (
+        <>
+            <Modal show={showTrocoModal} onHide={handleTrocoModalClose} className="custom-modal">
+                <Modal.Header closeButton className="custom-modal-header">
+                    <Modal.Title className="custom-modal-title">Calcular Troco</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="custom-modal-body">
+                    <Form.Group controlId="formValorRecebido">
+                        <Form.Label className="custom-modal-label">Valor Recebido</Form.Label>
+                        <InputGroup className="mb-3">
+                            <InputGroup.Text className="custom-modal-input-group-text">R$</InputGroup.Text>
+                            <Form.Control
+                                type="text"
+                                value={valorRecebido}
+                                autoComplete='off'
+                                onChange={(e) => {
+                                    setValorRecebido(e.target.value);
+                                    setCalculoFeito(false);
+                                    setTroco(null);
+                                }}
+                                ref={inputTrocoRef}
+                                onKeyDown={handleKeyDown}
+                                className="custom-modal-input"
+                            />
+                        </InputGroup>
+                    </Form.Group>
+                    {troco !== null && (
+                        <div className="troco-result">
+                            <span className='text-Troco'>Troco:</span>
+                            <span className='text-Value-Troco'>
+                                <b>R$ {(isNaN(troco) || troco === null || troco === undefined) ? '0,00' : troco.toFixed(2).toString().replace('.', ',')}</b>
+                            </span>
+                        </div>
+                    )}
+                </Modal.Body>
+                <Modal.Footer className="custom-modal-footer">
+                    {!calculoFeito ? (
+                        <Button
+                            variant="primary"
+                            onClick={handleCalcular}
+                            className="custom-modal-button-primary"
+                        >
+                            Calcular
+                        </Button>
+                    ) : (
+                        <Button
+                            variant="primary"
+                            onClick={handleFinalizarVenda}
+                            className="custom-modal-button-primary"
+                        >
+                            Finalizar Venda
+                        </Button>
+                    )}
+                </Modal.Footer>
+            </Modal>
+
+            {/* Modal de Confirmação de Impressão */}
+            {vendaData && (
+                <ModalImpressao
+                    showPrintConfirmationModal={showPrintConfirmationModal}
+                    handlePrintConfirmationModalClose={handlePrintConfirmationModalClose}
+                    produtos={vendaData.produtos}
+                    total={vendaData.total}
+                    valorRecebido={vendaData.valorRecebido}
+                    troco={vendaData.troco}
+                />
+            )}
+        </>
     );
+};
+
+ModalTroco.propTypes = {
+    showTrocoModal: PropTypes.bool.isRequired,
+    handleTrocoModalClose: PropTypes.func.isRequired,
+    handleTrocoCalculate: PropTypes.func.isRequired,
+    valorRecebido: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    setValorRecebido: PropTypes.func.isRequired,
+    troco: PropTypes.oneOfType([PropTypes.number, PropTypes.oneOf([null])]),
+    setTroco: PropTypes.func.isRequired,
+    inputTrocoRef: PropTypes.object.isRequired,
+    produtos: PropTypes.arrayOf(PropTypes.shape({
+        prod_cod: PropTypes.number.isRequired,
+        prod_nome: PropTypes.string.isRequired,
+        quantidade: PropTypes.number.isRequired,
+        prod_preco: PropTypes.number.isRequired
+    })).isRequired,
+    total: PropTypes.number.isRequired
 };
 
 export default ModalTroco;
