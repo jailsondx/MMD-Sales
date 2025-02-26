@@ -7,10 +7,19 @@ require('dotenv').config({ path: '../.env' });
 // Configurações da impressora
 const printerName = 'ELGIN'; // Nome da impressora instalada no sistema
 
+// Variaveis de Ambiente
+const SERVER_IP = process.env.VITE_SERVER_IP || 'localhost';
+const IP_PC_PRINTER = process.env.IP_PC01;
 const Empresa = process.env.EMPRESA || 'Nome da Empresa Padrão';
 const Endereco = process.env.ENDERECO || 'Endereço Padrão';
 
-console.log(Empresa);
+
+// Função para formatar uma linha da tabela
+function formatarLinha(colunas, tamanhos) {
+    return colunas
+        .map((coluna, index) => coluna.padEnd(tamanhos[index]))
+        .join(' ');
+}
 
 // Função para imprimir
 function ImprimirCupom(produtos = [], total, valorRecebido, troco) {
@@ -24,7 +33,7 @@ function ImprimirCupom(produtos = [], total, valorRecebido, troco) {
         // Inicializa a impressora
         const printer = new ThermalPrinter({
             type: PrinterTypes.EPSON, // Tipo da impressora (epson, star, etc.)
-            interface: `//localhost/${printerName}`, // Interface da impressora
+            interface: `//${IP_PC_PRINTER}/${printerName}`, // Interface da impressora
             options: {
                 encoding: 'PC860_PORTUGUESE' // Define a codificação de caracteres como UTF-8
             },
@@ -33,23 +42,41 @@ function ImprimirCupom(produtos = [], total, valorRecebido, troco) {
         });
 
         // Configurações adicionais
-        printer.setTextSize(0, 0);
+        printer.setTextSize(0, 0); // Tamanho padrão da fonte
         printer.alignCenter();
         printer.println(Empresa);
         printer.println(Endereco);
         printer.drawLine();
         printer.println('Esse cupom não possui valor fiscal');
         printer.drawLine();
+
+        // Cabeçalho da tabela
+        const tamanhosColunas = [5, 20, 10, 10]; // Tamanhos das colunas (QTD, PRODUTO, UN, TOTAL)
+        const cabecalho = formatarLinha(["QTD", "PRODUTO", "UN", "TOTAL"], tamanhosColunas);
         printer.alignLeft();
-        printer.println('QTD | PROD | UN | TOTAL');
-        printer.println(produtos.map((produto) => {
+        printer.println(cabecalho);
+        printer.drawLine();
+
+        // Dados da tabela
+        produtos.forEach((produto) => {
             const precoFloat = parseFloat(produto.prod_preco.replace(',', '.'));
             const totalProduto = produto.quantidade * precoFloat;
-            return `${produto.quantidade}x ${produto.prod_nome} | R$ ${produto.prod_preco} |  ${formatarPreco(totalProduto)}`;
-        }).join('\n'));
+            const linha = formatarLinha(
+                [
+                    `${produto.quantidade}x`, // Quantidade
+                    produto.prod_nome, // Nome do produto
+                    `R$ ${produto.prod_preco}`, // Preço unitário
+                    formatarPreco(totalProduto) // Total do produto
+                ],
+                tamanhosColunas
+            );
+            printer.println(linha);
+        });
+
+        // Rodapé
         printer.drawLine();
         printer.println(`Total: ${formatarPreco(total)}`);
-        printer.println(`Valor Recebido: ${formatarPreco(valorRecebido)}`);
+        printer.println(`Recebido: ${formatarPreco(valorRecebido)}`);
         printer.println(`Troco: ${formatarPreco(troco)}`);
         printer.cut();
 
@@ -58,11 +85,11 @@ function ImprimirCupom(produtos = [], total, valorRecebido, troco) {
             data: printer.getBuffer(), // Buffer com os comandos de impressão
             printer: printerName, // Nome da impressora
             type: 'RAW', // Tipo de impressão
-            success: function(jobID) {
+            success: function (jobID) {
                 console.log(`Impressão enviada com sucesso! Job ID: ${jobID}`);
                 resolve({ status: 200, message: 'Impressão realizada com sucesso!' });
             },
-            error: function(err) {
+            error: function (err) {
                 console.error('Erro ao imprimir:', err);
                 reject({ status: 500, message: 'Erro ao imprimir' });
             }
