@@ -4,14 +4,15 @@ const formatarPreco = require('./formatarPreco');
 
 require('dotenv').config({ path: '../.env' });
 
-// Configurações da impressora
-const printerName = 'ELGIN'; // Nome da impressora instalada no sistema
-
 // Variaveis de Ambiente
-const SERVER_IP = process.env.VITE_SERVER_IP || 'localhost';
-const IP_PC_PRINTER = process.env.IP_PC01;
+const CAIXA01 = process.env.CAIXA01;
+const CAIXA02 = process.env.CAIXA02;
 const Empresa = process.env.EMPRESA || 'Nome da Empresa Padrão';
 const Endereco = process.env.ENDERECO || 'Endereço Padrão';
+
+//Caixa
+let caixaPrinter;
+let printerName;
 
 
 // Função para formatar uma linha da tabela
@@ -22,7 +23,7 @@ function formatarLinha(colunas, tamanhos) {
 }
 
 // Função para imprimir
-function ImprimirCupom(produtos = [], total, valorRecebido, troco) {
+function ImprimirCupom(produtos = [], total, valorRecebido, troco, caixa) {
     return new Promise((resolve, reject) => {
         // Verifica se produtos é um array
         if (!Array.isArray(produtos)) {
@@ -30,10 +31,22 @@ function ImprimirCupom(produtos = [], total, valorRecebido, troco) {
             return reject({ status: 400, message: 'Produtos deve ser um array' });
         }
 
+        console.log('CAIXA: '+caixa)
+
+        if(caixa === 'Caixa 1'){
+            caixaPrinter = CAIXA01
+            printerName = process.env.PRINTERNAME_CX01;
+        } else if (caixa === 'Caixa 2'){
+            caixaPrinter = CAIXA02
+            printerName = process.env.PRINTERNAME_CX02;
+        }
+
+        console.log('IMPRESSORA DESTINO: '+caixaPrinter+'/'+printerName);
+
         // Inicializa a impressora
         const printer = new ThermalPrinter({
             type: PrinterTypes.EPSON, // Tipo da impressora (epson, star, etc.)
-            interface: `//${IP_PC_PRINTER}/${printerName}`, // Interface da impressora
+            interface: `//${caixaPrinter}/${printerName}`, // Interface da impressora
             options: {
                 encoding: 'PC860_PORTUGUESE' // Define a codificação de caracteres como UTF-8
             },

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Modal, Button } from 'react-bootstrap';
 import axios from 'axios';
@@ -13,6 +13,7 @@ const ModalImpressao = ({
     troco
 }) => {
     const naoButtonRef = useRef(null); // Referência para o botão "NÃO"
+    const [caixaSelecionada, setCaixaSelecionada] = useState('');
 
     // Define o foco no botão "NÃO" quando o modal é aberto
     useEffect(() => {
@@ -21,9 +22,22 @@ const ModalImpressao = ({
         }
     }, [showPrintConfirmationModal]);
 
+    // Atualiza o valor da caixa selecionada sempre que o modal for aberto
+    useEffect(() => {
+        if (showPrintConfirmationModal) {
+            const caixaSalva = sessionStorage.getItem('caixaSelecionada');
+            if (caixaSalva) {
+                setCaixaSelecionada(caixaSalva);
+            } else {
+                setCaixaSelecionada(''); // Caso não haja caixa selecionada
+            }
+        }
+    }, [showPrintConfirmationModal]); // Executa sempre que o modal for aberto
+
     // Função para enviar os dados para o backend
     const handleImprimir = async () => {
         try {
+            // Monta os dados para impressão
             const dadosParaImpressao = {
                 produtos: produtos.map((produto) => ({
                     prod_codigo: produto.prod_cod,
@@ -33,7 +47,8 @@ const ModalImpressao = ({
                 })),
                 total: total,
                 valorRecebido: valorRecebido,
-                troco: troco
+                troco: troco,
+                caixa: caixaSelecionada
             };
 
             // Envia os dados para o backend
@@ -89,6 +104,7 @@ const ModalImpressao = ({
             </Modal.Header>
             <Modal.Body className="custom-modal-body">
                 <p>Deseja imprimir o comprovante?</p>
+                <p>Caixa selecionada: {caixaSelecionada}</p>
             </Modal.Body>
             <Modal.Footer className="custom-modal-footer">
                 <Button

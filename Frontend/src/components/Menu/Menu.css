@@ -11,3 +11,14 @@
 .Logo-Menu:hover{
     transform: scale(1.1);
 }
+
+.Caixa{
+    width: 200px;
+    height: auto;
+}
+
+.btn-Caixa{
+    height: auto;
+    width: 100px;
+    padding: 0px;
+}

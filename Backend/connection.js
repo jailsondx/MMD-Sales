@@ -12,7 +12,7 @@ const DBconnection = mysql.createPool({
 async function testConnection() {
     try {
         const connectionTest = await DBconnection.getConnection();
-        console.log('Conectado ao Banco de Dados MySql:', process.env.DB_NAME);
+        console.log('Conectado ao Banco de Dados MySql:', process.env.DB_NAME, 'em', process.env.DB_HOST);
         connectionTest.release(); // Release the connection back to the pool
     } catch (error) {
         console.error('Error connecting to the database:', error.message);

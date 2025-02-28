@@ -364,14 +364,14 @@ app.post('/api/vendas/consultar', async (req, res) => {
 
 // Rota para imprimir o troco
 app.post('/api/vendas/impressao', async (req, res) => {
-  const { produtos, troco, valorRecebido, total } = req.body;
+  const { produtos, troco, valorRecebido, total, caixa } = req.body;
   const valorRecebidoFinal = valorRecebido || 0;
   const trocoFinal = troco || 0;
 
   const valorRecebidoFloat = parseFloat(valorRecebidoFinal);
   
   try {
-    const printerRequest = await ImprimirCupom(produtos, total, valorRecebidoFloat, trocoFinal);
+    const printerRequest = await ImprimirCupom(produtos, total, valorRecebidoFloat, trocoFinal, caixa);
 
     if (printerRequest.status === 200) {
       res.status(200).json({ message: printerRequest.message || 'Cupom impresso com sucesso.' });
