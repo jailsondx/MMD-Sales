@@ -33,7 +33,7 @@ const ModalTroco = ({
 
             const vendaData = {
                 produtos: produtos.map((produto) => ({
-                    prod_codigo: produto.prod_cod,
+                    id: produto.id,
                     prod_nome: produto.prod_nome,
                     quantidade: produto.quantidade,
                     prod_preco: produto.prod_preco
@@ -77,7 +77,8 @@ const ModalTroco = ({
 
     const handlePrintConfirmationModalClose = () => {
         setShowPrintConfirmationModal(false);
-        window.location.reload();
+        //window.location.reload();
+        
     }
 
     return (

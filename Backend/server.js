@@ -311,6 +311,7 @@ app.post('/api/vendas/fechar', async (req, res) => {
 
   // Prepara os itens da venda para enviar à função RegistrarVenda
   const itensVenda = produtos.map(produto => ({
+      id: produto.id,
       nome: produto.prod_nome,
       quantidade: produto.quantidade,
       preco_unitario: parseFloat(produto.prod_preco.replace(',', '.'))
