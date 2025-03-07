@@ -54,6 +54,10 @@ input[type=number] {
 
 }
 
+.SelectOptions::after{
+  margin: 20px;
+}
+
 .alert-Snackbar{
   width: 30vw;
 }

@@ -54,9 +54,16 @@ const TelaVendas = () => {
                 case 'F2':
                     setShowModal(true); // Abre modal para adicionar produto sem código de barras
                     break;
-                case 'F10':
+                case 'F10': {
+                    const caixaSelecionada = localStorage.getItem('caixaSelecionada');
+                    if (!caixaSelecionada) {
+                        setError('Caixa não selecionada. Por favor, selecione uma caixa antes de continuar.');
+                        return;
+                    }
+                    setError('');
                     setShowTrocoModal(true); // Abre modal para cálculo de troco
                     break;
+                }
                 case 'F4':
                     setShowVerificaProduto(true); // Abre modal para verificação de produto
                     break;

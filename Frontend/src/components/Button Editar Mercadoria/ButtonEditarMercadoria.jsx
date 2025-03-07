@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
 import { Form, Button } from 'react-bootstrap';
@@ -6,6 +6,7 @@ import { Alert, Snackbar } from '@mui/material';
 
 
 import './ButtonEditar.css';
+import PropTypes from 'prop-types';
 
 const ButtonEditarMercadoria = ({ mercadoria, onEdit }) => {
     const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -84,6 +85,7 @@ const ButtonEditarMercadoria = ({ mercadoria, onEdit }) => {
                     </span>
                 </Form>
             </Modal>
+
             <Snackbar open={showTemporaryModal} autoHideDuration={3000} onClose={handleClose}>
                 <Alert
                     className='alert-Snackbar'
@@ -93,6 +95,10 @@ const ButtonEditarMercadoria = ({ mercadoria, onEdit }) => {
             </Snackbar>
         </>
     );
+};
+ButtonEditarMercadoria.propTypes = {
+    mercadoria: PropTypes.object.isRequired,
+    onEdit: PropTypes.func.isRequired,
 };
 
 export default ButtonEditarMercadoria;

@@ -5,22 +5,22 @@ import { Modal, Button, ListGroup } from 'react-bootstrap';
 const ModalCaixa = ({ show, handleClose, onSalvarCaixa }) => {
     const [caixaSelecionada, setCaixaSelecionada] = useState(null);
 
-    // Função para salvar a caixa selecionada no sessionStorage
+    // Função para salvar a caixa selecionada no localStorage
     const handleSalvarCaixa = () => {
         if (caixaSelecionada) {
-            sessionStorage.setItem('caixaSelecionada', caixaSelecionada);
+            localStorage.setItem('caixaSelecionada', caixaSelecionada);
             onSalvarCaixa(caixaSelecionada); // Chama a função de callback
             handleClose(); // Fecha o modal após salvar
         }
     };
 
     return (
-        <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
+        <Modal className="custom-modal" show={show} onHide={handleClose}>
+            <Modal.Header className='custom-modal-header' closeButton>
                 <Modal.Title>Selecione a Caixa</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
-                <ListGroup>
+            <Modal.Body className='custom-modal-body-select'>
+                <ListGroup className='custom-modal-body-select'>
                     <ListGroup.Item
                         action
                         active={caixaSelecionada === 'Caixa 1'}

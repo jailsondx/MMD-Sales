@@ -77,8 +77,7 @@ const ModalTroco = ({
 
     const handlePrintConfirmationModalClose = () => {
         setShowPrintConfirmationModal(false);
-        //window.location.reload();
-        
+        window.location.reload();
     }
 
     return (

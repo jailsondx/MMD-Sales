@@ -17,10 +17,10 @@ async function AtualizaProduto(DBconnection, id, produto) {
         produto.prod_nome = produto.prod_nome.toUpperCase();
 
         // Preparando a consulta SQL
-        const sql = 'UPDATE produtos SET prod_nome = ?, prod_cod = ?, prod_preco = ?, prod_add_infor = ? WHERE id = ?';
+        const sql = 'UPDATE produtos SET prod_nome = ?, prod_cod = ?, prod_preco = ?, prod_estoque = ?, prod_add_infor = ? WHERE id = ?';
 
         // Valores para a consulta
-        const values = [produto.prod_nome, produto.prod_cod, produto.prod_preco, produto.prod_add_infor, id];
+        const values = [produto.prod_nome, produto.prod_cod, produto.prod_preco, produto.prod_estoque, produto.prod_add_infor, id];
 
         // Executando a consulta
         await DBconnection.query(sql, values);

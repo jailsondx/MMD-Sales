@@ -13,12 +13,41 @@
 }
 
 .Caixa{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
     width: 200px;
     height: auto;
+    color: white;
+    margin-left: 100px;
 }
 
 .btn-Caixa{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     height: auto;
-    width: 100px;
+    width: 200px;
     padding: 0px;
 }
+
+.btn-Caixa .Icon{
+    margin-right: 10px;
+}
+
+/* Estilo para o item ativo */
+.custom-modal-body-select .list-group-item {
+    background-color: gainsboro; /* Cor do fundo do item ativo */
+    color: rgb(133, 133, 133); /* Cor do texto do item ativo */
+    margin: 20px 0px 10px 0px; /* topo, direita, abaixo, esquerda */
+}
+
+.custom-modal-body-select .list-group-item.active {
+    background-color: #007bff; /* Cor do fundo do item ativo */
+    color: white; /* Cor do texto do item ativo */
+    margin: 20px 0px 10px 0px; /* topo, direita, abaixo, esquerda */
+}
+

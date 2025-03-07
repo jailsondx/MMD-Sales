@@ -25,7 +25,7 @@ const ModalImpressao = ({
     // Atualiza o valor da caixa selecionada sempre que o modal for aberto
     useEffect(() => {
         if (showPrintConfirmationModal) {
-            const caixaSalva = sessionStorage.getItem('caixaSelecionada');
+            const caixaSalva = localStorage.getItem('caixaSelecionada');
             if (caixaSalva) {
                 setCaixaSelecionada(caixaSalva);
             } else {

@@ -32,7 +32,7 @@ const ButtonEditar = ({ produto, onEdit }) => {
 
         if (name === 'prod_preco') {
             // Regex para permitir apenas números e uma vírgula
-            const regex = /^\d*\,?\d*$/;
+            const regex = /^\d*,?\d*$/;
             if (regex.test(value)) {
                 setEditedProduct({ ...editedProduct, [name]: value });
             }
@@ -118,8 +118,24 @@ const ButtonEditar = ({ produto, onEdit }) => {
                             name="prod_nome"
                             value={editedProduct.prod_nome}
                             onChange={handleChange}
+                            autoComplete='no'
+                            required
                         />
                     </Form.Group>
+
+                    <Form.Group controlId="formCodigoBarras">
+                                <Form.Label>Código de Barras:</Form.Label>
+                                <Form.Control
+                                    className='input-Cadastro'
+                                    type="number"
+                                    name="prod_cod"
+                                    value={editedProduct.prod_cod}
+                                    onChange={handleChange}
+                                    placeholder="Digite o código de barras"
+                                    autoComplete='no'
+                                    required
+                                />
+                            </Form.Group>
 
                     <Form.Group controlId="formPreco">
                         <Form.Label>Preço</Form.Label>
@@ -131,6 +147,8 @@ const ButtonEditar = ({ produto, onEdit }) => {
                                 name="prod_preco"
                                 value={editedProduct.prod_preco}
                                 onChange={handleChange}
+                                autoComplete='no'
+                                required
                             />
                         </InputGroup>
                     </Form.Group>
@@ -143,9 +161,9 @@ const ButtonEditar = ({ produto, onEdit }) => {
                                 type="number"
                                 name="prod_estoque"
                                 value={editedProduct.prod_estoque}
-                                autoComplete='no'
                                 onChange={handleChange}
                                 placeholder="Digite o estoque atual"
+                                autoComplete='no'
                                 required
                             />
                         </Form.Group>
@@ -158,6 +176,7 @@ const ButtonEditar = ({ produto, onEdit }) => {
                                 name="tipo"
                                 value={editedProduct.prod_tipo}// Acompanhando a unidade de medida no estado
                                 onChange={handleChange}
+                                autoComplete='no'
                                 required
                             >
                                 <option value="UN">UN</option>
@@ -174,6 +193,7 @@ const ButtonEditar = ({ produto, onEdit }) => {
                             name="prod_add_infor"
                             value={editedProduct.prod_add_infor}
                             onChange={handleChange}
+                            autoComplete='no'
                         />
                     </Form.Group>
 

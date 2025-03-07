@@ -4,6 +4,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Button from 'react-bootstrap/Button';
+import { BsPcDisplayHorizontal } from "react-icons/bs";
 import ModalCaixa from './ModalCaixa'; // Importa o componente do modal
 import './Menu.css';
 
@@ -11,9 +12,9 @@ function Menu() {
   const [showModal, setShowModal] = useState(false);
   const [caixaSelecionada, setCaixaSelecionada] = useState('');
 
-  // Recupera a caixa selecionada do sessionStorage ao carregar o componente
+  // Recupera a caixa selecionada do localStorage ao carregar o componente
   useEffect(() => {
-      const caixaSalva = sessionStorage.getItem('caixaSelecionada');
+      const caixaSalva = localStorage.getItem('caixaSelecionada');
       if (caixaSalva) {
           setCaixaSelecionada(caixaSalva);
       }
@@ -58,7 +59,9 @@ function Menu() {
                             </NavDropdown>
                             <Nav.Link href="/Consulta">Consultar Vendas</Nav.Link>
                             <span className='Caixa'>
+                            
                               <Button className='btn-Caixa' variant="outline-light" onClick={handleAbrirModal}>
+                              <BsPcDisplayHorizontal className='Icon'/>
                                   {caixaSelecionada || 'Selecionar Caixa'}
                               </Button>
                             </span>

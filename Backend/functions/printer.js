@@ -31,8 +31,6 @@ function ImprimirCupom(produtos = [], total, valorRecebido, troco, caixa) {
             return reject({ status: 400, message: 'Produtos deve ser um array' });
         }
 
-        console.log('CAIXA: '+caixa)
-
         if(caixa === 'Caixa 1'){
             caixaPrinter = CAIXA01
             printerName = process.env.PRINTERNAME_CX01;
@@ -41,7 +39,7 @@ function ImprimirCupom(produtos = [], total, valorRecebido, troco, caixa) {
             printerName = process.env.PRINTERNAME_CX02;
         }
 
-        console.log('IMPRESSORA DESTINO: '+caixaPrinter+'/'+printerName);
+        console.log('CAIXA:', caixa, '| Impressora:',caixaPrinter+'/'+printerName);
 
         // Inicializa a impressora
         const printer = new ThermalPrinter({
